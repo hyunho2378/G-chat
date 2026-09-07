@@ -15,18 +15,21 @@
 ## 2. 활자 클래스 (index.css @layer components)
 
 ```css
-.type-display { font-size: clamp(28px, 2vw + 20px, 40px); font-weight: 700; letter-spacing: -0.03em; line-height: 1.15; }
-.type-h1      { font-size: clamp(22px, 1vw + 18px, 30px); font-weight: 700; letter-spacing: -0.02em; line-height: 1.2; }
+/* 8단계 값. 웨이트 사다리 400 / 600 / 700 / 800, 인접한 짝은 최소 200 차이 */
+.type-display { font-size: clamp(30px, 2vw + 21px, 42px); font-weight: 700; letter-spacing: -0.035em; line-height: 1.14; }
+.type-h1      { font-size: clamp(24px, 1vw + 19px, 32px); font-weight: 700; letter-spacing: -0.025em; line-height: 1.2; }
 .type-h2      { font-size: clamp(18px, 0.5vw + 16px, 22px); font-weight: 600; letter-spacing: -0.02em; line-height: 1.25; }
-.type-h3      { font-size: clamp(16px, 0.3vw + 15px, 18px); font-weight: 700; letter-spacing: -0.015em; line-height: 1.3; }
-.type-kpi     { font-size: clamp(26px, 1.2vw + 20px, 36px); font-weight: 700; letter-spacing: -0.02em; line-height: 1.1; font-variant-numeric: tabular-nums; }
+.type-h3      { font-size: clamp(17px, 0.3vw + 15.5px, 19px); font-weight: 700; letter-spacing: -0.02em; line-height: 1.3; }
+.type-kpi     { font-size: clamp(28px, 1.2vw + 22px, 40px); font-weight: 800; letter-spacing: -0.03em; line-height: 1.05; font-variant-numeric: tabular-nums; }
 .type-body    { font-size: clamp(15px, 0.2vw + 14px, 17px); font-weight: 400; letter-spacing: -0.01em; line-height: 1.7; }
 .type-body-sm { font-size: clamp(13px, 0.15vw + 12.5px, 14px); font-weight: 400; letter-spacing: -0.005em; line-height: 1.55; }
-.type-caption { font-size: clamp(11px, 0.1vw + 10.5px, 12px); font-weight: 500; line-height: 1.4; }
+.type-caption { font-size: clamp(11px, 0.1vw + 10.5px, 12px); font-weight: 600; line-height: 1.4; }
 .type-meta    { font-size: 12px; font-weight: 400; letter-spacing: 0.01em; line-height: 1.4; }
+.type-count   { font-size: 10px; font-weight: 700; letter-spacing: 0.01em; line-height: 1; font-variant-numeric: tabular-nums; }
 ```
 
-컴포넌트에서 text-[15px] 같은 임의 크기 금지. 위 아홉 클래스만.
+컴포넌트에서 text-[15px] 같은 임의 크기 금지. 위 열 클래스만.
+index.css 와 tokens.typography 는 항상 같이 고친다. 값이 다르면 그 둘이 맞고 이 문서를 고친다.
 
 ## 3. 카드 베이스
 
@@ -55,23 +58,41 @@ border 클래스를 카드에 쓰지 않는다. shadow-card 링이 경계다. ho
 ## 5. 상태 필
 
 ```jsx
-// 7단계. 상태 넷은 정색 배경 + 흰 글자다. 네 정색은 tokens 에서 흰 배경 대비 4.5:1 이상이라
-// 흰 글자 대비도 같은 값이다. neutral 만 soft 로 남는다(사진 위 배지가 className 으로 bg 를 덮어쓴다)
+// 8단계. 연한 tint 배경 + 채도 있는 진한 글자 + 작은 정색 점.
+// 7단계의 정색 배경 + 흰 글자는 대비를 맞추느라 색을 어둡게 눌러 화면이 탁해져 되돌렸다.
+// 글자는 soft 배경 위 4.5:1 을 넘는다(DESIGN.md 시스템 색 표)
 const PILL = {
-  success: 'bg-success text-text-inverse',
-  warning: 'bg-warning text-text-inverse',
-  danger:  'bg-danger text-text-inverse',
-  info:    'bg-info text-text-inverse',
+  success: 'bg-success-soft text-success-text',
+  warning: 'bg-warning-soft text-warning-text',
+  danger:  'bg-danger-soft text-danger-text',
+  info:    'bg-info-soft text-info-text',
   neutral: 'bg-mute text-text-sec'
 }
+const DOT = { success: 'bg-success', warning: 'bg-warning', danger: 'bg-danger', info: 'bg-info', neutral: 'bg-text-ter' }
 
-<span className={`inline-flex items-center h-6 px-2 rounded-xs type-caption font-medium ${PILL[tone]}`}>
+<span className={`inline-flex items-center gap-1.5 h-6 px-2 rounded-xs type-caption ${PILL[tone]}`}>
+  <span className={`h-1.5 w-1.5 shrink-0 rounded-full ${DOT[tone]}`} aria-hidden="true" />
   {label}
 </span>
 ```
 
-점(dot)은 없다. 정색 면이 이미 상태를 보인다. 색으로만 뜻을 전하지 않는다는 규칙은 필 안 텍스트 라벨이 지킨다.
+점은 장식이라 aria-hidden 이다. 색으로만 뜻을 전하지 않는다는 규칙은 필 안 텍스트 라벨이 지킨다.
+Badge 는 종류 라벨이라 점 없이 tint + 진한 글자만 쓴다.
 상태 문자열 → tone 매핑은 StatusPill.jsx 한 곳. IA.md 상태 표 기준.
+
+**정색을 배경으로 채우는 곳은 배지가 아니다.** danger 버튼, 알림 카운트 인디케이터, 아바타 셋뿐이고
+셋 다 흰 글자 4.5:1 을 넘는다. 그 밖에서 `bg-success` `bg-warning` `bg-danger` `bg-info` 를 면으로 쓰지 않는다.
+
+```jsx
+// 알림 카운트. 벨 우상단 밖에 걸친다. Badge 를 쓰면 높이가 20px 이라 20px 벨을 덮는다
+<span className="relative inline-flex">
+  <Bell size={20} aria-hidden="true" />
+  {unread > 0 && (
+    <span className="absolute -right-1.5 -top-1.5 inline-flex h-4 min-w-4 items-center justify-center
+                     rounded-full bg-danger px-1 ring-2 ring-page type-count text-text-inverse">{unread}</span>
+  )}
+</span>
+```
 
 ## 6. 버튼
 

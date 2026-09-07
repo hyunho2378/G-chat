@@ -1,18 +1,18 @@
 import clsx from 'clsx'
 
-// 7단계. StatusPill 과 같은 규칙이다. 상태 넷은 정색 배경 + 흰 글자,
-// neutral 만 soft 로 남는다(사진 위 배지가 className 으로 bg 를 덮어쓴다)
+// 8단계. StatusPill 과 같은 규칙이다. 연한 tint 배경 + 채도 있는 진한 글자.
+// 점은 두지 않는다. 배지는 상태가 아니라 종류 라벨이다
 const TONE = {
-  success: 'bg-success text-text-inverse',
-  warning: 'bg-warning text-text-inverse',
-  danger: 'bg-danger text-text-inverse',
-  info: 'bg-info text-text-inverse',
+  success: 'bg-success-soft text-success-text',
+  warning: 'bg-warning-soft text-warning-text',
+  danger: 'bg-danger-soft text-danger-text',
+  info: 'bg-info-soft text-info-text',
   neutral: 'bg-mute text-text-sec'
 }
 
 export default function Badge({ tone = 'neutral', className, children }) {
   return (
-    <span className={clsx('inline-flex items-center h-5 px-1.5 rounded-xs type-caption font-medium', TONE[tone], className)}>
+    <span className={clsx('inline-flex items-center h-5 px-1.5 rounded-xs type-caption', TONE[tone], className)}>
       {children}
     </span>
   )

@@ -30,28 +30,32 @@ export const colors = {
     strong: '#C5CAD1'
   },
 
-  // 7단계에서 채도를 올리고 명도를 내렸다. 배지와 상태 필이 정색 배경 + 흰 글자로 바뀌었기 때문에
-  // 네 정색 모두 흰 배경 대비 4.5:1 이상이어야 한다(대비는 대칭이라 흰 글자 대비도 같은 값이다).
-  // soft 는 한 단계 진하게 올렸다. 이전 값은 흰 배경과 거의 구분되지 않았다
-  success: { DEFAULT: '#0A853D', soft: '#DCFCE7', text: '#166534' },   // 4.73:1
-  warning: { DEFAULT: '#B85C00', soft: '#FEF3C7', text: '#92400E' },   // 4.60:1
-  danger:  { DEFAULT: '#DE1B1B', soft: '#FEE2E2', text: '#991B1B' },   // 4.91:1
-  info:    { DEFAULT: '#2563EB', soft: '#DBEAFE', text: '#1E40AF' },   // 5.17:1
+  // 8단계. 7단계의 정색 배경 + 흰 글자를 되돌렸다. 그 조합이 흰 글자 4.5:1 을 강제해
+  // 네 색을 전부 어둡게 눌렀고 화면이 탁해졌다. 배지는 다시 soft 배경 + 진한 글자다.
+  // 정색은 배경으로 쓰지 않으므로(점과 아이콘과 차트 전용) 채도를 최대로 올렸고,
+  // 글자색은 soft 배경 위 4.5:1 을 넘는 선에서 가장 밝은 값을 골랐다.
+  // 세 값 모두 HSL 채도 76% 이상이다. 채도가 낮으면 회색기가 돌아 탁해 보인다
+  //          정색(점 아이콘 차트)          soft(배지 배경)      글자(배지 라벨)
+  success: { DEFAULT: '#16A34A', soft: '#E7F8EE', text: '#0A7C3C' },
+  warning: { DEFAULT: '#EA8600', soft: '#FEF4E4', text: '#A85C05' },
+  danger:  { DEFAULT: '#E11414', soft: '#FEEBEB', text: '#D01818' },
+  info:    { DEFAULT: '#2563EB', soft: '#E9F0FE', text: '#1D4ED8' },
 
-  // 3단계에서 데이터 3계열을 전부 흰 배경 3:1 이상으로 올렸고, 7단계에서 채도를 다시 올렸다.
-  // chart-2 는 뿌연 연파랑이 아니라 색상이 분리되는 azure 로, chart-3 은 또렷한 중립 슬레이트로 바꿨다
+  // 8단계. 도넛이 파랑과 회색이 섞여 흐렸다. 데이터 3계열을 전부 채도 있는 파랑으로 두고
+  // 중립 회색은 기타와 기준선 하나만 남겼다. 셋은 명도가 아니라 색상으로 갈린다(221 / 199 / 239).
+  // 흰 배경 3:1(WCAG 2.2 1.4.11 비텍스트)은 그대로 지킨다
   chart: {
-    1: '#2563EB',   // 5.17:1  주 계열. primary 와 같은 값
-    2: '#0284C7',   // 4.10:1  보조 계열. 색상(199)이 chart-1(221)과 갈려 명도만으로 구분하지 않는다
-    3: '#55606E',   // 6.39:1  3계열. 파랑이 아닌 중립색이라 색상으로도 구분된다
-    4: '#A8AEB6',   // 2.24:1  비교 기준선과 목표선 전용. 데이터 계열이 아니다
-    // 히트맵 단계. 0 은 bg-mute 고 1~4 가 이 넷이다. 알파를 흰 면에 겹치면 채도가 빠져 뿌예지므로
-    // 단계마다 실색을 둔다. 최고 단계는 chart-1 풀 채도와 같다
+    1: '#2563EB',   // 5.17:1  HSL(221,83%,53%)  주 계열. primary 와 같은 값
+    2: '#0284C7',   // 4.10:1  HSL(199,97%,39%)  보조 계열. azure
+    3: '#6366F1',   // 4.47:1  HSL(239,84%,67%)  3계열. indigo. 파선과 함께 쓴다
+    4: '#8A929C',   // 3.15:1  HSL(213,8%,58%)   기타 조각과 비교 기준선. 유일한 중립색
+    // 히트맵 단계. 0 은 데이터 없음이라 색 단계가 아니고 bg-mute 다.
+    // 채도를 92% 로 올려 최저 단계도 회색빛 없이 연한 파랑으로 읽힌다
     heat: {
-      1: '#A2BCF6',  // 1.90:1
-      2: '#789FF2',  // 2.61:1
-      3: '#4E81EF',  // 3.68:1
-      4: '#2563EB'   // 5.17:1
+      1: '#9DBEFB',  // 1.88:1  HSL(219,92%,80%)
+      2: '#71A1F9',  // 2.57:1  HSL(219,92%,71%)
+      3: '#4583F7',  // 3.59:1  HSL(219,92%,62%)
+      4: '#2563EB'   // 5.17:1  chart-1 풀 채도
     }
   }
 }
@@ -63,16 +67,22 @@ export const contrastOverrides = {
 }
 
 // 타이포. index.css @layer components 의 .type-* 클래스가 이 값을 그대로 쓴다
+// 8단계. "죄다 얇아서 위계가 안 보인다"는 피드백으로 웨이트 사다리를 400 / 600 / 700 / 800 넷으로 벌렸다.
+// 인접해 놓이는 짝은 최소 200 차이가 난다. 라벨(caption 600) 대 값(kpi 800), 카드 타이틀(h3 700) 대 본문(body 400),
+// 델타(caption 600) 대 보조 문구(meta 400) 다. 큰 활자는 크기 하한을 올리고 자간을 좁혀 덩어리감을 줬다.
+// 폰트는 Pretendard 그대로다. 800 은 Pretendard Variable 이 가진 웨이트다
 export const typography = {
-  display: { size: 'clamp(28px, 2vw + 20px, 40px)', weight: 700, tracking: '-0.03em', leading: 1.15 },
-  h1:      { size: 'clamp(22px, 1vw + 18px, 30px)', weight: 700, tracking: '-0.02em', leading: 1.2 },
+  display: { size: 'clamp(30px, 2vw + 21px, 42px)', weight: 700, tracking: '-0.035em', leading: 1.14 },
+  h1:      { size: 'clamp(24px, 1vw + 19px, 32px)', weight: 700, tracking: '-0.025em', leading: 1.2 },
   h2:      { size: 'clamp(18px, 0.5vw + 16px, 22px)', weight: 600, tracking: '-0.02em', leading: 1.25 },
-  h3:      { size: 'clamp(16px, 0.3vw + 15px, 18px)', weight: 700, tracking: '-0.015em', leading: 1.3 },
-  kpi:     { size: 'clamp(26px, 1.2vw + 20px, 36px)', weight: 700, tracking: '-0.02em', leading: 1.1 },
+  h3:      { size: 'clamp(17px, 0.3vw + 15.5px, 19px)', weight: 700, tracking: '-0.02em', leading: 1.3 },
+  kpi:     { size: 'clamp(28px, 1.2vw + 22px, 40px)', weight: 800, tracking: '-0.03em', leading: 1.05 },
   body:    { size: 'clamp(15px, 0.2vw + 14px, 17px)', weight: 400, tracking: '-0.01em', leading: 1.7 },
   bodySm:  { size: 'clamp(13px, 0.15vw + 12.5px, 14px)', weight: 400, tracking: '-0.005em', leading: 1.55 },
-  caption: { size: 'clamp(11px, 0.1vw + 10.5px, 12px)', weight: 500, tracking: '0', leading: 1.4 },
-  meta:    { size: '12px', weight: 400, tracking: '0.01em', leading: 1.4 }
+  caption: { size: 'clamp(11px, 0.1vw + 10.5px, 12px)', weight: 600, tracking: '0', leading: 1.4 },
+  meta:    { size: '12px', weight: 400, tracking: '0.01em', leading: 1.4 },
+  // 알림 카운트 전용. 벨 아이콘을 가리지 않으려면 배지가 16px 이어야 하고 그 안에 들어가는 유일한 크기다
+  count:   { size: '10px', weight: 700, tracking: '0.01em', leading: 1 }
 }
 
 export const spacing = {

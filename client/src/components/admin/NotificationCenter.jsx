@@ -9,7 +9,6 @@ import { get } from '../../lib/api.js'
 import { formatDate } from '../../lib/format.js'
 import usePopExit from '../../hooks/usePopExit.js'
 import useNotifications, { unreadCount } from '../../store/useNotifications.js'
-import Badge from '../ui/Badge.jsx'
 import IconButton from '../ui/IconButton.jsx'
 
 const ICON = {
@@ -66,9 +65,12 @@ export default function NotificationCenter() {
       >
         <span className="relative inline-flex">
           <Bell size={20} aria-hidden="true" />
+          {/* 8단계. 배지가 벨을 거의 다 덮었다. 카운트 인디케이터는 배지가 아니라 16px 알약이다.
+              벨 우상단 밖으로 빼고 page 색 링으로 벨 획과 떼어 놓는다.
+              두 자리 이상이면 min-w 를 넘겨 알약으로 늘어난다 */}
           {unread > 0 && (
-            <span className="absolute -right-1.5 -top-1.5">
-              <Badge tone="danger" className="tabular-nums">{unread}</Badge>
+            <span className="absolute -right-1.5 -top-1.5 inline-flex h-4 min-w-4 items-center justify-center rounded-full bg-danger px-1 ring-2 ring-page type-count text-text-inverse">
+              {unread}
             </span>
           )}
         </span>

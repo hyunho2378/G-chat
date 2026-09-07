@@ -2,16 +2,17 @@
 // 다른 파일에서 상태 색 매핑을 다시 정의하지 않는다(PATTERNS.md 절대 금지 패턴).
 import clsx from 'clsx'
 
-// 7단계. 상태 넷은 정색 배경 + 흰 글자다. soft 배경 + 진한 글자는 화면에서 읽히지 않았다.
-// 네 정색은 tokens 에서 흰 배경 대비 4.5:1 이상이라 흰 글자 대비도 같은 값이다.
-// neutral 만 soft 로 남는다. 상태가 아니라 값 없음 표기이고, 사진 위 배지가 bg 를 덮어쓰기 때문이다
+// 8단계. 7단계의 정색 배경 + 흰 글자를 되돌렸다. 대비를 맞추느라 네 색을 어둡게 눌러 화면이 탁해졌다.
+// 연한 tint 배경 + 채도 있는 진한 글자 + 작은 정색 점이다. 글자는 soft 배경 위 4.5:1 을 넘는다
 const PILL = {
-  success: 'bg-success text-text-inverse',
-  warning: 'bg-warning text-text-inverse',
-  danger: 'bg-danger text-text-inverse',
-  info: 'bg-info text-text-inverse',
+  success: 'bg-success-soft text-success-text',
+  warning: 'bg-warning-soft text-warning-text',
+  danger: 'bg-danger-soft text-danger-text',
+  info: 'bg-info-soft text-info-text',
   neutral: 'bg-mute text-text-sec'
 }
+// 점은 정색이다. 장식이라 aria-hidden 이고 뜻은 옆 라벨 텍스트가 전한다
+const DOT = { success: 'bg-success', warning: 'bg-warning', danger: 'bg-danger', info: 'bg-info', neutral: 'bg-text-ter' }
 
 // 필이 아닌 자리(KPI 목표 문구, 운영시간 표, 예약 셀)도 여기서 색을 받아 간다.
 // 상태에서 색으로 가는 길은 이 파일 하나뿐이어야 한다
@@ -49,10 +50,11 @@ export default function StatusPill({ status, label, size = 'md', className }) {
   const tone = statusTone(status)
   return (
     <span className={clsx(
-      'inline-flex items-center px-2 rounded-xs type-caption font-medium whitespace-nowrap',
+      'inline-flex items-center gap-1.5 px-2 rounded-xs type-caption whitespace-nowrap',
       size === 'sm' ? 'h-5' : 'h-6',
       PILL[tone], className
     )}>
+      <span className={clsx('h-1.5 w-1.5 shrink-0 rounded-full', DOT[tone])} aria-hidden="true" />
       {label || statusLabel(status)}
     </span>
   )

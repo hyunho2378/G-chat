@@ -41,7 +41,8 @@ export default function KpiCard({ label, value, decimals = 0, unit, delta, delta
 
   return (
     <Link to={to} className="block bg-page rounded-lg shadow-card p-5 lg:p-6 hover:shadow-md transition-shadow duration-fast">
-      <p className="type-caption text-text-meta">{label}</p>
+      {/* 8단계. 라벨이 너무 흐려 값과 위계가 안 섰다. text-meta → text-sec 한 단계 진하게 */}
+      <p className="type-caption text-text-sec">{label}</p>
       <p className="mt-2 type-kpi text-text-pri">
         {shown}
         {unit && <span className="ml-1 type-h3 text-text-meta">{unit}</span>}
