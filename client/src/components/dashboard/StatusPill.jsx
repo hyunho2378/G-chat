@@ -5,8 +5,10 @@ import clsx from 'clsx'
 // 배지는 연한 tint 배경 + 진한 글자 + 작은 정색 점이다(8단계). 글자는 배경 위 4.5:1 을 넘는다.
 // 9단계. KRDS 3색 체계. 색이 아니라 의미의 중립/주목/위험 셋이다.
 // 초록과 주황은 없다. 정상과 완료는 강조할 것이 아니라 기본이라 무채색이다
+// 9-1. 중립 배지 면은 mute 가 아니라 line-def 다. mute 는 canvas 와 대비 1.04 라
+// 회색 바탕(관리자 캔버스, subtle 표 헤더) 위에서 칩 형태가 사라진다
 const PILL = {
-  neutral: 'bg-mute text-text-sec',
+  neutral: 'bg-line-def text-text-sec',
   primary: 'bg-primary-soft text-primary-text',
   danger: 'bg-danger-soft text-danger-text'
 }

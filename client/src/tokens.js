@@ -19,7 +19,9 @@ export const colors = {
   primary: {
     DEFAULT: '#2563EB',
     hover: '#1D4ED8',
-    soft: '#EFF6FF',
+    // 9-1. #EFF6FF 는 흰 배경 위에서 대비 1.09, canvas 위에서 1.01 이라 칩 형태가 보이지 않았다.
+    // 한 단계 올려 두 바탕 모두에서 경계가 읽히게 했다(page 1.28 / canvas 1.20)
+    soft: '#D6E4FD',
     line: '#BFDBFE',
     text: '#1E40AF'
   },
@@ -37,7 +39,8 @@ export const colors = {
   //   danger        마감 실패 이슈 오답 미해결 휴관 같은 부정만. 아껴 쓴다
   // 8단계의 soft 배경 + 진한 글자 방식은 그대로다. 색만 셋으로 줄었다.
   // 정보(안내) 색은 primary 를 그대로 쓴다. 별도 파랑 토큰을 두면 같은 값이 두 이름으로 갈린다
-  danger:  { DEFAULT: '#E11414', soft: '#FEEBEB', text: '#D01818' },
+  // 9-1. soft 를 한 단계 진하게 올리고(page 1.32 / canvas 1.23) 글자를 그만큼 내려 4.5:1 을 지켰다
+  danger:  { DEFAULT: '#E11414', soft: '#FBD8D8', text: '#C21A1A' },
 
   // 9단계. 유채색은 주 계열 하나뿐이다. 나머지 계열은 무채색 명도차로 갈린다.
   // 파랑 여러 단계를 쓰면 어느 것이 주인지 알 수 없다. 부정 계열(미해결 추이)만 danger 를 빌려 쓴다.

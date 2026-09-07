@@ -60,8 +60,9 @@ border 클래스를 카드에 쓰지 않는다. shadow-card 링이 경계다. ho
 ```jsx
 // 9단계. KRDS 3색 체계. 톤은 중립 주목 위험 셋뿐이다. 초록과 주황은 없다.
 // 정상과 완료와 대기는 강조할 것이 아니라 기본이라 중립이다
+// 9-1. 중립 면은 mute 가 아니라 line-def 다. mute 는 canvas 와 대비 1.04 라 회색 바탕에서 칩이 사라진다
 const PILL = {
-  neutral: 'bg-mute text-text-sec',
+  neutral: 'bg-line-def text-text-sec',
   primary: 'bg-primary-soft text-primary-text',
   danger:  'bg-danger-soft text-danger-text'
 }
