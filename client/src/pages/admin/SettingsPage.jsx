@@ -5,6 +5,7 @@ import { Copy } from 'lucide-react'
 import { Link, useSearchParams } from 'react-router-dom'
 import { LANGS, useLang } from '../../i18n/LangContext.jsx'
 import { get, put } from '../../lib/api.js'
+import { pickText } from '../../lib/lang.js'
 import useToast from '../../hooks/useToast.js'
 import { useTopbar } from '../../store/useAdminUi.js'
 import Button from '../../components/ui/Button.jsx'
@@ -32,7 +33,7 @@ function Section({ title, children }) {
 }
 
 export default function SettingsPage() {
-  const { t } = useLang()
+  const { t, lang } = useLang()
   const toast = useToast()
   const [params, setParams] = useSearchParams()
   const tab = TABS.includes(params.get('tab')) ? params.get('tab') : 'org'
@@ -65,7 +66,8 @@ export default function SettingsPage() {
     get('/api/settings/public').then((s) => {
       if (!alive) return
       setForm({
-        orgName: s.orgName || '', contact: '', orgHours: '', privacyText: '',
+        // 기관명은 4언어지만 입력은 현재 언어 값 한 개를 고친다(lib/lang.js pickText)
+        orgName: pickText(s.orgName, lang), contact: '', orgHours: '', privacyText: '',
         suggestions: s.suggestions || [], trustLine: s.trustLine || '', noSource: '', defaultDepartment: '',
         languages: Object.fromEntries((s.languages || []).map((l) => [l, true])),
         headlines: {}, embed: '', kakao: '', alertHandoff: true, alertAccuracy: '85', alertIndex: true

@@ -6,6 +6,7 @@ import { Outlet } from 'react-router-dom'
 import { useLang } from '../../i18n/LangContext.jsx'
 import useMediaQuery from '../../hooks/useMediaQuery.js'
 import { get } from '../../lib/api.js'
+import { pickText } from '../../lib/lang.js'
 import useAdminUi from '../../store/useAdminUi.js'
 import Drawer from '../ui/Drawer.jsx'
 import IconButton from '../ui/IconButton.jsx'
@@ -13,7 +14,7 @@ import Sidebar from './Sidebar.jsx'
 import Topbar from './Topbar.jsx'
 
 export default function AdminLayout() {
-  const { t } = useLang()
+  const { t, lang } = useLang()
   const sidebarOpen = useAdminUi((s) => s.sidebarOpen)
   const setSidebarOpen = useAdminUi((s) => s.setSidebarOpen)
   const bannerDismissed = useAdminUi((s) => s.desktopBannerDismissed)
@@ -34,7 +35,7 @@ export default function AdminLayout() {
   // 폭이 넓어지면 드로어는 닫는다
   useEffect(() => { if (isDesktop) setSidebarOpen(false) }, [isDesktop, setSidebarOpen])
 
-  const orgName = settings?.orgName || ''
+  const orgName = pickText(settings?.orgName, lang)
 
   return (
     <div className="min-h-screen bg-canvas">

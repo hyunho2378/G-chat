@@ -31,7 +31,7 @@ const Composer = forwardRef(function Composer(
 
   return (
     <div>
-      <div className="flex items-end gap-3 p-3 pl-4 rounded-xl bg-page border border-line-def focus-within:border-primary focus-within:ring-2 focus-within:ring-primary-line transition-colors duration-fast">
+      <div className="flex items-center gap-3 p-3 pl-4 rounded-xl bg-page border border-line-def focus-within:border-primary focus-within:ring-2 focus-within:ring-primary-line transition-colors duration-fast">
         <textarea
           ref={ref} rows={2} value={value} autoFocus={autoFocus}
           aria-label={t('chat.ariaInput')}

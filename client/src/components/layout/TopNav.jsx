@@ -45,13 +45,14 @@ export default function TopNav() {
     <header className="sticky top-0 z-nav bg-page border-b border-line-sub">
       <div
         className={clsx(
-          'mx-auto flex h-nav-m lg:h-nav w-full items-center justify-between gap-3',
+          'mx-auto flex h-nav-m lg:h-nav w-full items-center gap-3',
           'px-4 md:px-6 lg:px-8 xl:px-10 3xl:px-16',
           'transition-[max-width] duration-dur ease-out',
           panelOpen ? 'max-w-none' : 'max-w-page'
         )}
       >
-        <div className="flex min-w-0 items-center gap-1">
+        {/* 좌우 그룹에 같은 flex 기저를 줘 가운데 메뉴가 로고와 언어 전환 사이 중앙에 온다 */}
+        <div className="flex min-w-0 flex-1 items-center gap-1">
           {/* 모바일 대화 목록. 데스크톱은 대화 화면 좌측 레일이 같은 일을 한다 */}
           {showList && (
             <IconButton
@@ -64,14 +65,14 @@ export default function TopNav() {
           <Logo />
         </div>
 
-        <nav className="hidden md:flex items-center gap-1" aria-label={t('common.nav.menu')}>
+        <nav className="hidden md:flex shrink-0 items-center gap-1" aria-label={t('common.nav.menu')}>
           {/* 데스크톱 메뉴는 LangSwap 으로 그린다. t() 로 그리면 언어를 바꿀 때 메뉴가 서로 밀린다 */}
           {MENU.map((m) => (
-            <NavLink key={m.to} to={m.to} className={link}><LangSwap k={m.key} /></NavLink>
+            <NavLink key={m.to} to={m.to} className={link}><LangSwap k={m.key} className="text-center" /></NavLink>
           ))}
         </nav>
 
-        <div className="flex items-center gap-1">
+        <div className="flex min-w-0 flex-1 items-center justify-end gap-1">
           <LangSwitch />
           <IconButton
             size="lg" className="md:hidden" aria-label={t('common.nav.menu')}

@@ -55,21 +55,22 @@ border 클래스를 카드에 쓰지 않는다. shadow-card 링이 경계다. ho
 ## 5. 상태 필
 
 ```jsx
+// 7단계. 상태 넷은 정색 배경 + 흰 글자다. 네 정색은 tokens 에서 흰 배경 대비 4.5:1 이상이라
+// 흰 글자 대비도 같은 값이다. neutral 만 soft 로 남는다(사진 위 배지가 className 으로 bg 를 덮어쓴다)
 const PILL = {
-  success: 'bg-success-soft text-success-text',
-  warning: 'bg-warning-soft text-warning-text',
-  danger:  'bg-danger-soft text-danger-text',
-  info:    'bg-info-soft text-info-text',
+  success: 'bg-success text-text-inverse',
+  warning: 'bg-warning text-text-inverse',
+  danger:  'bg-danger text-text-inverse',
+  info:    'bg-info text-text-inverse',
   neutral: 'bg-mute text-text-sec'
 }
-const DOT = { success: 'bg-success', warning: 'bg-warning', danger: 'bg-danger', info: 'bg-info', neutral: 'bg-text-ter' }
 
-<span className={`inline-flex items-center gap-1.5 h-6 px-2 rounded-sm type-caption ${PILL[tone]}`}>
-  <span className={`w-2 h-2 rounded-full ${DOT[tone]}`} aria-hidden="true" />
+<span className={`inline-flex items-center h-6 px-2 rounded-xs type-caption font-medium ${PILL[tone]}`}>
   {label}
 </span>
 ```
 
+점(dot)은 없다. 정색 면이 이미 상태를 보인다. 색으로만 뜻을 전하지 않는다는 규칙은 필 안 텍스트 라벨이 지킨다.
 상태 문자열 → tone 매핑은 StatusPill.jsx 한 곳. IA.md 상태 표 기준.
 
 ## 6. 버튼
@@ -287,6 +288,46 @@ export default function XxxPage() {
   )
 }
 ```
+
+## 19. 리로드 중 데이터 유지 (7단계)
+
+기간 탭이나 분석 탭을 바꿀 때 데이터를 null 로 되돌리면 트리가 통째로 언마운트돼 화면 전체가 깜빡인다.
+이전 데이터를 그대로 두고 차트와 표 영역만 흐리게 둔다.
+
+```jsx
+const [data, setData] = useState(null)
+const [busy, setBusy] = useState(true)
+useEffect(() => {
+  let alive = true
+  setBusy(true)                                   // setData(null) 하지 않는다
+  get(url).then((d) => { if (!alive) return; setData(d); setBusy(false) })
+          .catch(() => { if (alive) setBusy(false) })
+  return () => { alive = false }
+}, [range, tab])
+
+if (!data) return <Skeleton .../>                 // 첫 진입에만 스켈레톤
+
+<Reloading busy={busy} className="mt-4"><TrendChart ... /></Reloading>
+```
+
+`Reloading` 은 `aria-busy` 와 `opacity-40 transition-opacity duration-fast` 만 건다.
+페이지 골격, KPI 카드 라벨, 사이드바는 언마운트되지 않는다.
+
+## 20. 데이터에 실린 다국어 값 (7단계)
+
+UI 문자열은 i18n 사전이, 백엔드가 주는 값(기관명, 시설명, 운영시간 낱말)은 `lib/lang.js` 가 맡는다.
+
+```jsx
+import { facilityName, hoursText, pickText } from '../../lib/lang.js'
+const { t, lang } = useLang()
+
+pickText(settings?.orgName, lang)     // 문자열이면 그대로, 객체면 현재 언어. 없으면 ko
+facilityName(facility, lang)          // name_en name_ja name_zh, 없으면 name
+hoursText(value, t)                   // 휴관 24시간 입실~퇴실 같은 낱말만 사전 표기로. 시각 범위는 그대로
+```
+
+번역하지 않는 원문(주소, 이용 안내, 공지 본문, FAQ 질문과 답변, 부서명)에는 `lang="ko"` 를 박는다.
+원문 무결성 규칙(PITFALLS 23)을 지키면서 그 부분만 한국어임을 선언한다(WCAG 3.1.2 Language of Parts).
 
 ## 절대 금지 패턴
 

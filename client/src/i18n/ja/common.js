@@ -112,6 +112,14 @@ export default {
       list: "お知らせ一覧"
     },
     faq: {
+      cat: {
+        hours: "営業時間",
+        fee: "料金",
+        reserve: "予約",
+        guide: "利用案内",
+        way: "アクセス",
+        closed: "休館"
+      },
       title: "よくある質問",
       subtitle: "よくいただく質問と回答をまとめました",
       askMore: "さらに詳しく尋ねる",

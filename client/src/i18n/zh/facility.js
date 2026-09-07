@@ -36,6 +36,10 @@ export default {
       notFound: "未找到该设施",
       openMap: "在地图中查看"
     },
+    hours: {
+      allDay: "24小时",
+      stay: "入住 {in} 退房 {out}"
+    },
     day: {
       mon: "周一",
       tue: "周二",

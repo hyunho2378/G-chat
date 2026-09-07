@@ -9,6 +9,9 @@ import Chip from '../../components/ui/Chip.jsx'
 import EmptyState from '../../components/ui/EmptyState.jsx'
 import Skeleton from '../../components/ui/Skeleton.jsx'
 
+// 카테고리 값은 데이터(원문)라 한국어다. 쿼리에는 그 값을 그대로 쓰고 화면 라벨만 사전에서 꺼낸다
+const CAT_KEY = { 운영시간: 'hours', 요금: 'fee', 예약: 'reserve', 이용안내: 'guide', 찾아오는길: 'way', 휴관: 'closed' }
+
 export default function FaqPage() {
   const { t } = useLang()
   const [params, setParams] = useSearchParams()
@@ -44,7 +47,7 @@ export default function FaqPage() {
           </Chip>
           {categories.map((c) => (
             <Chip key={c} variant={c === cat ? 'selected' : 'outline'} aria-pressed={c === cat} onClick={() => setCat(c)}>
-              {c}
+              {CAT_KEY[c] ? t(`common.faq.cat.${CAT_KEY[c]}`) : c}
             </Chip>
           ))}
         </div>
@@ -66,7 +69,8 @@ export default function FaqPage() {
                     onClick={() => setOpenId(open ? null : f.id)}
                     className="flex w-full items-center justify-between gap-3 min-h-14 px-4 py-3 text-left hover:bg-mute transition-colors duration-fast"
                   >
-                    <span className="min-w-0 type-h3 text-text-pri">{f.question}</span>
+                    {/* 질문과 답변은 등록된 원문이다. 번역하지 않고 언어만 선언한다(WCAG 3.1.2) */}
+                    <span lang="ko" className="min-w-0 type-h3 text-text-pri">{f.question}</span>
                     <ChevronDown
                       size={20} aria-hidden="true"
                       className={clsx('shrink-0 text-text-meta transition-transform duration-fast ease-out', open && 'rotate-180')}
@@ -75,7 +79,7 @@ export default function FaqPage() {
                 </h2>
                 {open && (
                   <div id={`faq-${f.id}`} className="px-4 pb-4 animate-flow-down">
-                    <p className="type-body text-text-sec whitespace-pre-wrap">{f.answer}</p>
+                    <p lang="ko" className="type-body text-text-sec whitespace-pre-wrap">{f.answer}</p>
                     <Link
                       to={`/?q=${encodeURIComponent(f.question)}${f.facilityId ? `&facility=${f.facilityId}` : ''}`}
                       className="mt-3 inline-flex items-center min-h-11 type-body-sm font-medium text-primary hover:text-primary-hover transition-colors duration-fast"

@@ -36,6 +36,10 @@ export default {
       notFound: "시설을 찾을 수 없습니다",
       openMap: "지도에서 보기"
     },
+    hours: {
+      allDay: "24시간",
+      stay: "입실 {in} 퇴실 {out}"
+    },
     day: {
       mon: "월",
       tue: "화",

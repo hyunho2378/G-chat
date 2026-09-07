@@ -9,6 +9,7 @@ import clsx from 'clsx'
 import { SquarePen } from 'lucide-react'
 import { useLang } from '../../i18n/LangContext.jsx'
 import useChat from '../../hooks/useChat.js'
+import { facilityName, localizeSuggestion, pickText } from '../../lib/lang.js'
 import useChatUi from '../../store/useChatUi.js'
 import Drawer from '../ui/Drawer.jsx'
 import IconButton from '../ui/IconButton.jsx'
@@ -35,8 +36,9 @@ export default function ChatHero({
   const [input, setInput] = useState(initialQuestion || '')
   const taRef = useRef(null)
 
-  const orgName = settings?.orgName || ''
+  const orgName = pickText(settings?.orgName, lang)
   const facilityId = facility?.id
+  const facName = facilityName(facility, lang)
 
   // 이 대화가 화면에 없으면 헤더 폭을 건드리지 않는다
   useEffect(() => { if (active) setPanelOpen(phase === 'chat') }, [active, phase, setPanelOpen])
@@ -91,19 +93,19 @@ export default function ChatHero({
   const suggestions = useMemo(() => {
     if (qr) {
       return [
-        { label: t('chat.qr.chipHours'), question: `${facility.name} 오늘 운영시간`, iconName: 'hours' },
-        { label: t('chat.qr.chipReserve'), question: `${facility.name} 지금 예약 가능한 시간`, iconName: 'reserve' },
-        { label: t('chat.qr.chipFee'), question: `${facility.name} 이용 요금`, iconName: 'fee' },
-        { label: t('chat.qr.chipParking'), question: `${facility.name} 주차 안내`, iconName: 'place' }
+        { label: t('chat.qr.chipHours'), question: `${facName} ${t('chat.suggestion.hoursQuestion')}`, iconName: 'hours' },
+        { label: t('chat.qr.chipReserve'), question: `${facName} ${t('chat.suggestion.reserveQuestion')}`, iconName: 'reserve' },
+        { label: t('chat.qr.chipFee'), question: `${facName} ${t('chat.suggestion.feeQuestion')}`, iconName: 'fee' },
+        { label: t('chat.qr.chipParking'), question: `${facName} ${t('chat.suggestion.wayQuestion')}`, iconName: 'place' }
       ]
     }
-    // 시설 컨텍스트가 있으면 같은 주제를 그 시설로 좁혀 보낸다
-    return (settings?.suggestions || []).map((s) => ({
-      label: s.label,
-      iconName: s.iconName,
-      question: facility ? `${facility.name} ${s.question}` : s.question
-    }))
-  }, [qr, facility, settings, t])
+    // 시설 컨텍스트가 있으면 같은 주제를 그 시설로 좁혀 보낸다.
+    // 라벨과 질문은 현재 언어로 낸다. 시설명도 그 언어 이름을 붙여야 답변이 같은 언어로 온다
+    return (settings?.suggestions || []).map((s) => {
+      const it = localizeSuggestion(s, t)
+      return { ...it, question: facility ? `${facName} ${it.question}` : it.question }
+    })
+  }, [qr, facility, facName, settings, t])
 
   const trustLine = orgName ? t('chat.trustLine', { org: orgName }) : ''
 
@@ -117,8 +119,8 @@ export default function ChatHero({
           )}>
             <h1 className="type-display text-text-pri text-center break-keep">
               {qr
-                ? t('chat.qr.headline', { facility: facility.name })
-                : facility ? t('chat.headlineFacility', { facility: facility.name }) : t('chat.headline', { org: orgName })}
+                ? t('chat.qr.headline', { facility: facName })
+                : facility ? t('chat.headlineFacility', { facility: facName }) : t('chat.headline', { org: orgName })}
             </h1>
             <p className="mt-4 type-body text-text-meta text-center">{qr ? t('chat.qr.sub') : t('chat.sub')}</p>
 

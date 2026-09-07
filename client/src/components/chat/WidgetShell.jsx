@@ -9,6 +9,7 @@ import clsx from 'clsx'
 import { MessagesSquare, X } from 'lucide-react'
 import { useLang } from '../../i18n/LangContext.jsx'
 import useChat from '../../hooks/useChat.js'
+import { localizeSuggestion, pickText } from '../../lib/lang.js'
 import { stripMarkdown } from '../../lib/stripMarkdown.js'
 import IconButton from '../ui/IconButton.jsx'
 import ActionBar from './ActionBar.jsx'
@@ -50,7 +51,7 @@ export default function WidgetShell({ settings, lang }) {
   const lastQRef = useRef(null)
   const taRef = useRef(null)
 
-  const orgName = settings?.orgName || ''
+  const orgName = pickText(settings?.orgName, lang)
 
   // 부모 문서에 알린다. 임베드한 쪽이 iframe 높이를 바꿀 수 있어야 한다
   useEffect(() => {
@@ -76,7 +77,7 @@ export default function WidgetShell({ settings, lang }) {
   }
   const pick = (q) => { if (!streaming) { setInput(''); send(q, { lang }) } }
 
-  const suggestions = (settings?.suggestions || []).slice(0, 4)
+  const suggestions = (settings?.suggestions || []).slice(0, 4).map((s) => localizeSuggestion(s, t))
   const lastIndex = messages.length - 1
 
   return (

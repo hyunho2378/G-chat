@@ -6,6 +6,7 @@ import { Check } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { useLang } from '../../i18n/LangContext.jsx'
 import { get, post } from '../../lib/api.js'
+import { pickText } from '../../lib/lang.js'
 import useToast from '../../hooks/useToast.js'
 import { useTopbar } from '../../store/useAdminUi.js'
 import useNotifications from '../../store/useNotifications.js'
@@ -21,7 +22,7 @@ const STEPS = ['Org', 'Facilities', 'Manual', 'Build', 'Preview']
 const mmss = (sec) => `${String(Math.floor(sec / 60)).padStart(2, '0')}:${String(sec % 60).padStart(2, '0')}`
 
 export default function OnboardingPage() {
-  const { t } = useLang()
+  const { t, lang } = useLang()
   const toast = useToast()
   const navigate = useNavigate()
   const pushNotification = useNotifications((s) => s.push)
@@ -52,7 +53,7 @@ export default function OnboardingPage() {
       .then(([s, f]) => {
         if (!alive || !s?.orgName) return
         setExisting(true)
-        setOrg((prev) => ({ ...prev, orgName: s.orgName, langs: s.languages || ['ko'] }))
+        setOrg((prev) => ({ ...prev, orgName: pickText(s.orgName, lang), langs: s.languages || ['ko'] }))
         setFacilities(f.map((x) => ({
           id: x.id, name: x.name, type: x.type, address: x.address,
           phone: x.phone, department: x.department, hours: x.hours?.mon || '', errors: []
@@ -60,7 +61,7 @@ export default function OnboardingPage() {
       })
       .catch(() => {})
     return () => { alive = false }
-  }, [])
+  }, [lang])
 
   const canNext = useMemo(() => {
     if (step === 0) return org.orgName.trim().length > 0

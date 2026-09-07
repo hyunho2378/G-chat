@@ -12,6 +12,7 @@ import DateRangeTabs from '../../components/dashboard/DateRangeTabs.jsx'
 import DonutChart from '../../components/dashboard/DonutChart.jsx'
 import KpiCard from '../../components/dashboard/KpiCard.jsx'
 import RankList from '../../components/dashboard/RankList.jsx'
+import Reloading from '../../components/dashboard/Reloading.jsx'
 import ReviewQueueCard from '../../components/dashboard/ReviewQueueCard.jsx'
 import TrendChart from '../../components/dashboard/TrendChart.jsx'
 
@@ -33,20 +34,23 @@ export default function DashboardPage() {
   const navigate = useNavigate()
   const range = useAdminUi((s) => s.range)
   const [kpi, setKpi] = useState(null)
+  const [busy, setBusy] = useState(true)
   const [facilities, setFacilities] = useState({})
 
   useTopbar({ title: t('admin.dashboard.title'), actions: <DashboardActions /> })
 
+  // 기간을 바꿔도 이전 데이터를 버리지 않는다. 버리면 트리가 통째로 언마운트돼 화면이 깜빡인다(7단계)
   useEffect(() => {
     let alive = true
-    setKpi(null)
+    setBusy(true)
     Promise.all([get(`/api/admin/kpi?range=${range}`), get('/api/admin/facilities')])
       .then(([k, f]) => {
         if (!alive) return
         setKpi(k)
         setFacilities(Object.fromEntries(f.map((x) => [x.id, x.name])))
+        setBusy(false)
       })
-      .catch(() => {})
+      .catch(() => { if (alive) setBusy(false) })
     return () => { alive = false }
   }, [range])
 
@@ -110,29 +114,29 @@ export default function DashboardPage() {
       <div className="grid gap-4 lg:grid-cols-[2fr_1fr]">
         <section className="min-w-0 bg-page rounded-lg shadow-card p-4 lg:p-5">
           <h2 className="type-h3 text-text-pri">{t('admin.dashboard.trend')}</h2>
-          <div className="mt-3">
+          <Reloading busy={busy} className="mt-3">
             <TrendChart labels={kpi.trend.labels} series={series} ariaLabel={t('admin.dashboard.trend')} />
-          </div>
+          </Reloading>
         </section>
 
         <section className="min-w-0 bg-page rounded-lg shadow-card p-4 lg:p-5">
           <h2 className="type-h3 text-text-pri">{t('admin.dashboard.topQuestions')}</h2>
-          <div className="mt-4">
+          <Reloading busy={busy} className="mt-4">
             <RankList
               items={kpi.topQuestions}
               actionLabel={t('admin.dashboard.addToFaq')}
               onAction={() => navigate('/admin/knowledge?tab=pending')}
             />
-          </div>
+          </Reloading>
         </section>
       </div>
 
       <div className="grid gap-4 lg:grid-cols-2">
         <section className="min-w-0 bg-page rounded-lg shadow-card p-4 lg:p-5">
           <h2 className="type-h3 text-text-pri">{t('admin.dashboard.facilityShare')}</h2>
-          <div className="mt-4">
+          <Reloading busy={busy} className="mt-4">
             <DonutChart items={share} otherLabel={t('facility.filter.etc')} ariaLabel={t('admin.dashboard.facilityShare')} />
-          </div>
+          </Reloading>
         </section>
 
         <ReviewQueueCard queue={kpi.reviewQueue} />

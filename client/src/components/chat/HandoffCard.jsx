@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import { Phone } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { useLang } from '../../i18n/LangContext.jsx'
+import { hoursText } from '../../lib/lang.js'
 import { get, post } from '../../lib/api.js'
 import useToast from '../../hooks/useToast.js'
 import Button from '../ui/Button.jsx'
@@ -82,7 +83,7 @@ export default function HandoffCard({ facilityId, messageId }) {
                 </a>
               </dd>
               <dt className="type-caption text-text-meta">{t('chat.handoffCard.hours')}</dt>
-              <dd className="type-body-sm text-text-sec">{todayHours}</dd>
+              <dd className="type-body-sm text-text-sec">{hoursText(todayHours, t)}</dd>
             </dl>
           )}
         </div>

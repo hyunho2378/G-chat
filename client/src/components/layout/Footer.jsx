@@ -1,10 +1,11 @@
 // 시민 푸터. 기관 정보와 개인정보처리방침. 상담 홈(/)에서는 렌더하지 않는다.
 import { Link } from 'react-router-dom'
 import { useLang } from '../../i18n/LangContext.jsx'
+import { pickText } from '../../lib/lang.js'
 
 export default function Footer({ settings }) {
-  const { t } = useLang()
-  const orgName = settings?.orgName || ''
+  const { t, lang } = useLang()
+  const orgName = pickText(settings?.orgName, lang)
   return (
     <footer className="mt-auto border-t border-line-sub bg-canvas">
       <div className="mx-auto w-full max-w-page px-4 md:px-6 lg:px-8 xl:px-10 3xl:px-16 py-8 lg:py-10">

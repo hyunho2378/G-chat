@@ -49,7 +49,8 @@ export default function BarChart({ groups = [], height = 240, ariaLabel }) {
             })}
 
             {groups.map((g, gi) => {
-              const barW = Math.min(56, (groupW * 0.7) / Math.max(1, g.bars.length))
+              // 7단계. 막대를 두껍게 했다. 두 그룹 비교 차트라 얇으면 색이 면으로 안 읽힌다
+              const barW = Math.min(72, (groupW * 0.78) / Math.max(1, g.bars.length))
               const startX = PAD.l + groupW * gi + (groupW - barW * g.bars.length) / 2
               return (
                 <g key={g.label}>
@@ -58,7 +59,7 @@ export default function BarChart({ groups = [], height = 240, ariaLabel }) {
                     const h = Math.max(1, Math.abs(zeroY - y(b.value)))
                     return (
                       <rect
-                        key={b.key} x={startX + barW * bi} y={top} width={barW - 4} height={h} rx="4"
+                        key={b.key} x={startX + barW * bi} y={top} width={barW - 6} height={h} rx="4"
                         className={b.fill}
                         style={{
                           transformOrigin: `0 ${zeroY}px`,

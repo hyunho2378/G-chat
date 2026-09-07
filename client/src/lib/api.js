@@ -4,7 +4,15 @@
 // 시민 면 인계 접수 → 관리자 인계 목록 → 완료 처리 → 대시보드 반영 왕복이 실제로 돈다.
 const API_URL = import.meta.env.VITE_API_URL || ''
 const USE_MOCK = import.meta.env.VITE_USE_MOCK === 'true'
+// 기관명은 4언어다. 화면은 lib/lang.js pickText 로 현재 언어 값을 고른다.
+// VITE_ORG_NAME 은 한국어 기본값 폴백으로만 쓴다(PITFALLS 24. 컴포넌트에 기관명을 박지 않는다)
 const ORG_NAME = import.meta.env.VITE_ORG_NAME || ''
+const ORG_NAMES = {
+  ko: ORG_NAME,
+  en: 'Donghae City Facilities Management Corp.',
+  ja: '東海市施設管理公団',
+  zh: '东海市设施管理公团'
+}
 
 function fail(code, message) {
   const err = new Error(message)
@@ -92,13 +100,16 @@ async function loadMocks() {
       users: users.default, handoff: handoff.default,
       insights: insights.default, patterns: patterns.default,
       reports: reports.default, forecast: forecast.default,
-      settings: { orgName: ORG_NAME },
+      settings: { orgName: { ...ORG_NAMES } },
       reviewed: 0,
       reservations: []          // 채팅에서 만든 예약. 세션 메모리
     })
   }
   return mocks
 }
+
+// 개통하면 기관명이 문자열 한 개로 덮인다. 화면 밖(계약 문구)에서는 한국어 값만 쓴다
+const orgKo = (d) => (typeof d.settings.orgName === 'string' ? d.settings.orgName : d.settings.orgName?.ko || '')
 
 const WEEKDAY = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat']
 const todayHours = (f) => f.hours[WEEKDAY[new Date().getDay()]]
@@ -163,14 +174,15 @@ const ROUTES = [
   ['GET', /^\/api\/settings\/public$/, (d) => ({
     orgName: d.settings.orgName,
     logoUrl: '',
-    headline: { ko: `${d.settings.orgName} 공공시설, 무엇이든 물어보세요` },
+    headline: { ko: `${orgKo(d)} 공공시설, 무엇이든 물어보세요` },
+    // key 가 있으면 화면이 i18n 사전에서 현재 언어 문장을 꺼낸다. label question 은 한국어 폴백이다
     suggestions: [
-      { label: '시설 운영시간', question: '시설 운영시간을 알려 주세요', iconName: 'hours' },
-      { label: '이용 요금 안내', question: '이용 요금을 알려 주세요', iconName: 'fee' },
-      { label: '공공시설 예약', question: '공공시설 예약은 어떻게 하나요', iconName: 'reserve' },
-      { label: '찾아오는 길', question: '찾아오는 길을 알려 주세요', iconName: 'place' }
+      { key: 'hours', label: '시설 운영시간', question: '시설 운영시간을 알려 주세요', iconName: 'hours' },
+      { key: 'fee', label: '이용 요금 안내', question: '이용 요금을 알려 주세요', iconName: 'fee' },
+      { key: 'reserve', label: '공공시설 예약', question: '공공시설 예약은 어떻게 하나요', iconName: 'reserve' },
+      { key: 'way', label: '찾아오는 길', question: '찾아오는 길을 알려 주세요', iconName: 'place' }
     ],
-    trustLine: `${d.settings.orgName} 공식 자료로만 답합니다. 답변마다 출처를 표시합니다`,
+    trustLine: `${orgKo(d)} 공식 자료로만 답합니다. 답변마다 출처를 표시합니다`,
     languages: ['ko', 'en', 'ja', 'zh']
   })],
 

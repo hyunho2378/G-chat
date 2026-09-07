@@ -33,7 +33,7 @@ export default function RankList({ items = [], onAction, actionLabel }) {
                 </Button>
               )}
             </div>
-            <div className="mt-1.5 ml-8 h-0.5 rounded-full bg-line-sub" aria-hidden="true">
+            <div className="mt-1.5 ml-8 h-1.5 rounded-full bg-line-sub" aria-hidden="true">
               <div className="h-full rounded-full bg-chart-1" style={{ width: `${(it.count / max) * 100}%` }} />
             </div>
           </li>

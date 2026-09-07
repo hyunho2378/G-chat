@@ -28,7 +28,7 @@ const LANG_NAME = { ko: '한국어', en: 'English', ja: '日本語', zh: '中文
 const INTENT = [
   ['reservation', /예약|자리|남았|코트|캠핑|빈\s*시간|reserv|book|court|予約|空き|预约|订场/i],
   ['fee', /요금|얼마|가격|비용|입장료|fee|price|cost|料金|いくら|费用|价格|多少钱/i],
-  ['location', /어디|가는\s*길|찾아|위치|주차|오시는|where|location|parking|直행|場所|駐車|アクセス|在哪|位置|停车|怎么去/i],
+  ['location', /어디|가는\s*길|찾아|위치|주차|오시는|where|location|parking|directions|get\s*there|場所|駐車|アクセス|行き方|在哪|位置|停车|怎么去|交通|路线/i],
   ['hours', /운영\s*시간|몇\s*시|영업|이용\s*안내|언제|open|hour|close|営業|時間|何時|开放|时间|几点/i]
 ]
 
@@ -67,7 +67,10 @@ const ALIAS = [
 
 function pickFacility(message, facilityId) {
   if (facilityId) return facilities.find((f) => f.id === facilityId) || null
-  const byName = facilities.find((f) => message.includes(f.name.slice(0, 3)))
+  // 한국어는 앞 세 글자로, 다른 언어는 전체 이름으로 맞춘다. 외국어 이름은 짧게 자르면 서로 겹친다
+  const byName = facilities.find((f) => message.includes(f.name.slice(0, 3))
+    || [f.name_ja, f.name_zh].some((n) => n && message.includes(n))
+    || (f.name_en && message.toLowerCase().includes(f.name_en.toLowerCase())))
   if (byName) return byName
   const hit = ALIAS.find(([, re]) => re.test(message))
   return hit ? facilities.find((f) => f.id === hit[0]) : null
@@ -207,7 +210,9 @@ function buildScenario(message, facilityId) {
   const t = TEXT[lang]
   const L = LABEL[lang]
   const S = SUMMARY[lang]
-  const fac = pickFacility(message, facilityId) || facilities.find((f) => f.id === 'fac-008')
+  const picked = pickFacility(message, facilityId) || facilities.find((f) => f.id === 'fac-008')
+  // 답변 안 시설명도 질문 언어로 낸다. 번역이 없으면 한국어 이름으로 떨어진다
+  const fac = lang === 'ko' ? picked : { ...picked, name: picked[`name_${lang}`] || picked.name }
   const intent = classify(message)
   const steps = []
   const push = (wait, evt) => steps.push({ wait, evt })

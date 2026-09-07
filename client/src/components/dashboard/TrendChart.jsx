@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import clsx from 'clsx'
 import { formatNumber } from '../../lib/format.js'
-import { labelStep, linePath, niceMax, useChartSize, useEnterOnce } from './chartUtils.js'
+import { areaPath, labelStep, niceMax, smoothPath, useChartSize, useEnterOnce } from './chartUtils.js'
 
 const PAD = { l: 40, r: 12, t: 8, b: 26 }
 
@@ -20,6 +20,9 @@ export default function TrendChart({ labels = [], series = [], height = 240, ari
   const y = (v) => PAD.t + innerH - (innerH * v) / max
   const step = labelStep(n, innerW)
   const ticks = [0, 0.25, 0.5, 0.75, 1]
+  // 점 간격이 좁으면 마커가 선을 덮어 오히려 안 읽힌다. 분기(90일) 같은 긴 구간은 선만 그린다
+  const gap = n > 1 ? innerW / (n - 1) : innerW
+  const showDots = gap >= 24
 
   return (
     <div className="relative">
@@ -48,29 +51,48 @@ export default function TrendChart({ labels = [], series = [], height = 240, ari
               <text key={l} x={x(i)} y={height - 6} textAnchor="middle" className="fill-text-meta tabular-nums" fontSize="12">{l}</text>
             ) : null))}
 
+            {/* 주 계열 아래 면. 단색 알파다(그라데이션 금지). 선보다 먼저 그려 선이 위에 온다 */}
+            {series[0] && !series[0].dash && (
+              <path
+                d={areaPath(smoothPath(series[0].points, x, y), x(0), x(n - 1), PAD.t + innerH)}
+                className={series[0].fill} fillOpacity="0.1" stroke="none"
+                opacity={entered ? 1 : 0}
+                style={{ transition: 'opacity var(--dur) var(--ease-out)' }}
+              />
+            )}
+
             {series.map((s) => (s.dash ? (
               // 파선 계열은 그려 들어오는 애니메이션 대신 페이드로 진입한다.
               // pathLength 정규화와 실제 dash 단위를 같이 쓸 수 없다
               <path
-                key={s.key} d={linePath(s.points, x, y)} fill="none" strokeWidth="2"
+                key={s.key} d={smoothPath(s.points, x, y)} fill="none" strokeWidth="2"
                 strokeLinecap="round" strokeLinejoin="round" className={s.stroke}
                 strokeDasharray={s.dash} opacity={entered ? 1 : 0}
                 style={{ transition: 'opacity var(--dur) var(--ease-out)' }}
               />
             ) : (
               <path
-                key={s.key} d={linePath(s.points, x, y)} fill="none" strokeWidth="2"
+                key={s.key} d={smoothPath(s.points, x, y)} fill="none" strokeWidth="2.5"
                 strokeLinecap="round" strokeLinejoin="round" className={s.stroke}
                 pathLength="1" strokeDasharray="1" strokeDashoffset={entered ? 0 : 1}
                 style={{ transition: 'stroke-dashoffset var(--dur) var(--ease-out)' }}
               />
             )))}
 
+            {/* 데이터 포인트 마커. 계열색 채움에 흰 테두리라 선이 겹쳐도 점이 산다 */}
+            {showDots && series.map((s) => (
+              <g key={`${s.key}-dots`} opacity={entered ? 1 : 0} style={{ transition: 'opacity var(--dur) var(--ease-out)' }}>
+                {s.points.map((v, i) => (
+                  <circle key={i} cx={x(i)} cy={y(v)} r="3.5" className={clsx(s.fill, 'stroke-page')} strokeWidth="1.5" />
+                ))}
+              </g>
+            ))}
+
             {hover !== null && (
               <line x1={x(hover)} x2={x(hover)} y1={PAD.t} y2={PAD.t + innerH} className="stroke-line-strong" strokeWidth="1" />
             )}
             {hover !== null && series.map((s) => (
-              <circle key={s.key} cx={x(hover)} cy={y(s.points[hover])} r="3.5" className={clsx(s.fill, 'stroke-page')} strokeWidth="2" />
+              <circle key={s.key} cx={x(hover)} cy={y(s.points[hover])} r="5" className={clsx(s.fill, 'stroke-page')} strokeWidth="2" />
             ))}
 
             <rect

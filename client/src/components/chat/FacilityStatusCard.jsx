@@ -3,13 +3,14 @@
 import { useEffect, useState } from 'react'
 import { ExternalLink } from 'lucide-react'
 import { useLang } from '../../i18n/LangContext.jsx'
+import { facilityName, hoursText } from '../../lib/lang.js'
 import { get } from '../../lib/api.js'
 import Button from '../ui/Button.jsx'
 import Skeleton from '../ui/Skeleton.jsx'
 import StatusPill from '../dashboard/StatusPill.jsx'
 
 export default function FacilityStatusCard({ facilityId }) {
-  const { t } = useLang()
+  const { t, lang } = useLang()
   const [data, setData] = useState(null)
 
   useEffect(() => {
@@ -29,9 +30,9 @@ export default function FacilityStatusCard({ facilityId }) {
     <section className="mt-4 bg-page rounded-lg shadow-card p-4 animate-flow-down-late">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div className="min-w-0">
-          <h3 className="type-h3 text-text-pri">{facility.name}</h3>
+          <h3 className="type-h3 text-text-pri">{facilityName(facility, lang)}</h3>
           <p className="mt-1 type-body-sm text-text-sec">
-            {t('chat.facilityCard.todayHours')} {status.todayHours}
+            {t('chat.facilityCard.todayHours')} {hoursText(status.todayHours, t)}
           </p>
         </div>
         <div className="flex shrink-0 items-center gap-2">

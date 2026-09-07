@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { useLang } from '../../i18n/LangContext.jsx'
+import { facilityName } from '../../lib/lang.js'
 import { get } from '../../lib/api.js'
 import { formatDate } from '../../lib/format.js'
 import Button from '../../components/ui/Button.jsx'
@@ -8,7 +9,7 @@ import EmptyState from '../../components/ui/EmptyState.jsx'
 import Skeleton from '../../components/ui/Skeleton.jsx'
 
 export default function NoticeDetailPage() {
-  const { t } = useLang()
+  const { t, lang } = useLang()
   const { id } = useParams()
   const [notice, setNotice] = useState(null)
   const [facility, setFacility] = useState(null)
@@ -44,8 +45,9 @@ export default function NoticeDetailPage() {
     <article className="page-enter mx-auto w-full max-w-page px-4 md:px-6 lg:px-8 xl:px-10 3xl:px-16 py-8 lg:py-10">
       <div className="max-w-text">
         <p className="type-meta text-text-meta tabular-nums">{formatDate(notice.publishedAt)}</p>
-        <h1 className="mt-1.5 type-h1 text-text-pri">{notice.title}</h1>
-        <p className="mt-6 type-body text-text-sec whitespace-pre-wrap">{notice.body}</p>
+        {/* 공지 원문. 번역하지 않고 언어만 선언한다(WCAG 3.1.2) */}
+        <h1 lang="ko" className="mt-1.5 type-h1 text-text-pri">{notice.title}</h1>
+        <p lang="ko" className="mt-6 type-body text-text-sec whitespace-pre-wrap">{notice.body}</p>
 
         <div className="mt-8 flex flex-wrap items-center gap-3">
           <Button as={Link} to={`/?facility=${notice.facilityId || ''}&q=${encodeURIComponent(notice.title)}`}>
@@ -53,7 +55,7 @@ export default function NoticeDetailPage() {
           </Button>
           {facility && (
             <Link to={`/facilities/${facility.id}`} className="type-body-sm text-primary hover:text-primary-hover transition-colors duration-fast">
-              {t('common.notice.related')} {facility.name}
+              {t('common.notice.related')} {facilityName(facility, lang)}
             </Link>
           )}
         </div>

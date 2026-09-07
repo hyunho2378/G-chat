@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useLang } from '../../i18n/LangContext.jsx'
+import { facilityName } from '../../lib/lang.js'
 import { get } from '../../lib/api.js'
 import { formatDate } from '../../lib/format.js'
 import Badge from '../../components/ui/Badge.jsx'
@@ -8,7 +9,7 @@ import EmptyState from '../../components/ui/EmptyState.jsx'
 import Skeleton from '../../components/ui/Skeleton.jsx'
 
 export default function NoticesPage() {
-  const { t } = useLang()
+  const { t, lang } = useLang()
   const [rows, setRows] = useState(null)
   const [facilities, setFacilities] = useState({})
 
@@ -18,11 +19,11 @@ export default function NoticesPage() {
       .then(([notices, facs]) => {
         if (!alive) return
         setRows(notices)
-        setFacilities(Object.fromEntries(facs.map((f) => [f.id, f.name])))
+        setFacilities(Object.fromEntries(facs.map((f) => [f.id, facilityName(f, lang)])))
       })
       .catch(() => { if (alive) setRows([]) })
     return () => { alive = false }
-  }, [])
+  }, [lang])
 
   return (
     <div className="page-enter mx-auto w-full max-w-page px-4 md:px-6 lg:px-8 xl:px-10 3xl:px-16 py-8 lg:py-10">
@@ -45,8 +46,9 @@ export default function NoticesPage() {
                   <span className="type-meta text-text-meta tabular-nums">{formatDate(n.publishedAt)}</span>
                   {n.facilityId && facilities[n.facilityId] && <Badge>{facilities[n.facilityId]}</Badge>}
                 </div>
-                <p className="mt-1.5 type-h3 text-text-pri">{n.title}</p>
-                <p className="mt-1 type-body-sm text-text-meta line-clamp-2">{n.body}</p>
+                {/* 공지 제목과 본문은 기관이 올린 원문이다. 번역하지 않고 언어만 선언한다(WCAG 3.1.2) */}
+                <p lang="ko" className="mt-1.5 type-h3 text-text-pri">{n.title}</p>
+                <p lang="ko" className="mt-1 type-body-sm text-text-meta line-clamp-2">{n.body}</p>
               </Link>
             </li>
           ))}

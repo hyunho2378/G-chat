@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useLang } from '../../i18n/LangContext.jsx'
+import { facilityName, hoursText } from '../../lib/lang.js'
 import Badge from '../ui/Badge.jsx'
 import StatusPill from '../dashboard/StatusPill.jsx'
 
@@ -12,9 +13,11 @@ const placeholder = (type) => `/images/facilities/type-${TYPES.includes(type) ? 
 const WEEKDAY = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat']
 
 export default function FacilityCard({ facility }) {
-  const { t } = useLang()
+  const { t, lang } = useLang()
   const [broken, setBroken] = useState(false)
   const todayHours = facility.hours?.[WEEKDAY[new Date().getDay()]] || ''
+  // 시설명은 데이터의 4언어 필드에서, 유형 라벨은 i18n 에서 온다. 둘 다 한국어로 남지 않는다
+  const name = facilityName(facility, lang)
 
   return (
     <Link
@@ -24,20 +27,20 @@ export default function FacilityCard({ facility }) {
       <div className="relative aspect-[16/10] bg-mute">
         <img
           src={broken || !facility.image ? placeholder(facility.type) : facility.image}
-          alt={facility.name} loading="lazy" onError={() => setBroken(true)}
+          alt={name} loading="lazy" onError={() => setBroken(true)}
           className="h-full w-full object-cover"
         />
         {/* 사진 면 위에서는 중립 배지가 배경과 같은 회색이라 안 보인다. page 면으로 띄운다 */}
-        <span className="absolute left-3 top-3"><Badge className="bg-page shadow-card">{facility.typeLabel}</Badge></span>
+        <span className="absolute left-3 top-3"><Badge className="bg-page shadow-card">{t(`facility.filter.${facility.type}`)}</Badge></span>
         <span className="absolute right-3 top-3">
           <StatusPill status={facility.status} label={t(`common.status.${facility.status}`)} />
         </span>
       </div>
 
       <div className="p-4">
-        <h3 className="type-h3 text-text-pri line-clamp-1">{facility.name}</h3>
+        <h3 className="type-h3 text-text-pri line-clamp-1">{name}</h3>
         <p className="mt-1.5 type-body-sm text-text-sec">
-          {t('facility.card.todayHours')} {todayHours}
+          {t('facility.card.todayHours')} {hoursText(todayHours, t)}
         </p>
         <p className="mt-2 type-caption text-text-meta">
           {t('facility.card.reservation')} {t(`common.status.${facility.reservation}`)}

@@ -2,6 +2,9 @@
   {
     "id": "fac-001",
     "name": "국민체육센터",
+    "name_en": "Public Sports Center",
+    "name_ja": "国民体育センター",
+    "name_zh": "国民体育中心",
     "type": "sports",
     "typeLabel": "체육",
     "address": "동해시 천곡로 000",
@@ -44,6 +47,9 @@
   {
     "id": "fac-002",
     "name": "망상 오토캠핑리조트",
+    "name_en": "Mangsang Auto Camping Resort",
+    "name_ja": "望祥オートキャンプリゾート",
+    "name_zh": "望祥汽车露营度假村",
     "type": "tourism",
     "typeLabel": "관광",
     "address": "동해시 망상동 000",
@@ -86,6 +92,9 @@
   {
     "id": "fac-003",
     "name": "천곡황금박쥐동굴",
+    "name_en": "Cheongok Golden Bat Cave",
+    "name_ja": "泉谷黄金コウモリ洞窟",
+    "name_zh": "泉谷黄金蝙蝠洞",
     "type": "tourism",
     "typeLabel": "관광",
     "address": "동해시 동굴로 000",
@@ -128,6 +137,9 @@
   {
     "id": "fac-004",
     "name": "무릉별유천지",
+    "name_en": "Mureung Byeolyucheonji",
+    "name_ja": "武陵別有天地",
+    "name_zh": "武陵别有天地",
     "type": "tourism",
     "typeLabel": "관광",
     "address": "동해시 삼화동 000",
@@ -170,6 +182,9 @@
   {
     "id": "fac-005",
     "name": "동해문화예술회관",
+    "name_en": "Donghae Arts Center",
+    "name_ja": "東海文化芸術会館",
+    "name_zh": "东海文化艺术会馆",
     "type": "culture",
     "typeLabel": "문화",
     "address": "동해시 천곡동 000",
@@ -208,6 +223,9 @@
   {
     "id": "fac-006",
     "name": "묵호항 공영주차장",
+    "name_en": "Mukho Port Public Parking",
+    "name_ja": "墨湖港公営駐車場",
+    "name_zh": "墨湖港公营停车场",
     "type": "parking",
     "typeLabel": "주차",
     "address": "동해시 묵호진동 000",
@@ -250,6 +268,9 @@
   {
     "id": "fac-007",
     "name": "동해시 국민여가캠핑장",
+    "name_en": "Donghae Public Leisure Campsite",
+    "name_ja": "東海市国民レジャーキャンプ場",
+    "name_zh": "东海市国民休闲露营地",
     "type": "tourism",
     "typeLabel": "관광",
     "address": "동해시 삼화동 000",
@@ -284,6 +305,9 @@
   {
     "id": "fac-008",
     "name": "천곡 실내테니스장",
+    "name_en": "Cheongok Indoor Tennis Court",
+    "name_ja": "泉谷屋内テニス場",
+    "name_zh": "泉谷室内网球场",
     "type": "sports",
     "typeLabel": "체육",
     "address": "동해시 천곡동 000",

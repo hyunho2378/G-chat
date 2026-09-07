@@ -13,6 +13,7 @@ import Tabs from '../../components/ui/Tabs.jsx'
 import BarChart from '../../components/dashboard/BarChart.jsx'
 import DateRangeTabs from '../../components/dashboard/DateRangeTabs.jsx'
 import Heatmap from '../../components/dashboard/Heatmap.jsx'
+import Reloading from '../../components/dashboard/Reloading.jsx'
 import TrendChart from '../../components/dashboard/TrendChart.jsx'
 
 const TABS = ['auto', 'nps', 'handoff', 'accuracy']
@@ -37,11 +38,11 @@ function downloadCsv(name, header, rows) {
   URL.revokeObjectURL(url)
 }
 
-function Panel({ title, children, className }) {
+function Panel({ title, busy, children, className }) {
   return (
     <section className={`min-w-0 bg-page rounded-lg shadow-card p-4 lg:p-5 ${className || ''}`}>
       <h2 className="type-h3 text-text-pri">{title}</h2>
-      <div className="mt-4">{children}</div>
+      <Reloading busy={busy} className="mt-4">{children}</Reloading>
     </section>
   )
 }
@@ -81,14 +82,16 @@ export default function AnalyticsPage() {
   const tab = TABS.includes(params.get('tab')) ? params.get('tab') : 'auto'
   const range = useAdminUi((s) => s.range)
   const [data, setData] = useState(null)
+  const [busy, setBusy] = useState(true)
   const [logs, setLogs] = useState([])
   const [facilities, setFacilities] = useState({})
 
   useTopbar({ title: t('admin.analytics.title'), actions: <AnalyticsActions /> })
 
+  // 탭이나 기간을 바꿔도 이전 데이터를 버리지 않는다. 차트와 표만 흐려 두고 값이 오면 교체한다(7단계)
   useEffect(() => {
     let alive = true
-    setData(null)
+    setBusy(true)
     Promise.all([
       get(`/api/admin/analytics/${tab}?range=${range}`),
       get('/api/admin/logs?page=1&pageSize=1000'),
@@ -99,8 +102,9 @@ export default function AnalyticsPage() {
         setData(d)
         setLogs(l.rows || [])
         setFacilities(Object.fromEntries(f.map((x) => [x.id, x.name])))
+        setBusy(false)
       })
-      .catch(() => {})
+      .catch(() => { if (alive) setBusy(false) })
     return () => { alive = false }
   }, [tab, range])
 
@@ -144,7 +148,7 @@ export default function AnalyticsPage() {
       <DateRangeTabs className="sm:hidden" />
       <Tabs items={TABS.map((v) => ({ value: v, label: t(TAB_KEY[v]) }))} value={tab} onChange={setTab} />
 
-      <Panel title={`${t(TAB_KEY[tab])} ${t('admin.analytics.trendTitle')}`}>
+      <Panel busy={busy} title={`${t(TAB_KEY[tab])} ${t('admin.analytics.trendTitle')}`}>
         <TrendChart
           labels={data.trend.labels} series={series} height={280}
           ariaLabel={`${t(TAB_KEY[tab])} ${t('admin.analytics.trendTitle')}`}
@@ -152,13 +156,13 @@ export default function AnalyticsPage() {
       </Panel>
 
       {tab === 'auto' && (
-        <Panel title={t('admin.analytics.heatmap')}>
+        <Panel busy={busy} title={t('admin.analytics.heatmap')}>
           <Heatmap matrix={data.breakdown.byHour} ariaLabel={t('admin.analytics.heatmap')} />
         </Panel>
       )}
 
       {tab === 'nps' && data.npsBeforeAfter && (
-        <Panel title={t('admin.analytics.beforeAfter')}>
+        <Panel busy={busy} title={t('admin.analytics.beforeAfter')}>
           <BarChart
             height={260} ariaLabel={t('admin.analytics.beforeAfter')}
             groups={[
@@ -179,13 +183,13 @@ export default function AnalyticsPage() {
       )}
 
       <div className="grid gap-4 lg:grid-cols-3">
-        <Panel title={t('admin.analytics.byFacility')}>
+        <Panel busy={busy} title={t('admin.analytics.byFacility')}>
           <CountTable caption={t('admin.analytics.byFacility')} labelHead={t('common.meta.facility')} rows={byFacility} />
         </Panel>
-        <Panel title={t('admin.analytics.byLang')}>
+        <Panel busy={busy} title={t('admin.analytics.byLang')}>
           <CountTable caption={t('admin.analytics.byLang')} labelHead={t('common.language')} rows={byLang} />
         </Panel>
-        <Panel title={t('admin.analytics.byType')}>
+        <Panel busy={busy} title={t('admin.analytics.byType')}>
           <CountTable caption={t('admin.analytics.byType')} labelHead={t('admin.analytics.byType')} rows={byType} />
         </Panel>
       </div>
@@ -204,7 +208,7 @@ export default function AnalyticsPage() {
             {t('admin.analytics.exportCsv')}
           </Button>
         </div>
-        <div className="mt-4 overflow-x-auto">
+        <Reloading busy={busy} className="mt-4 overflow-x-auto">
           <table className="w-full text-left tabular-nums">
             <thead>
               <tr className="bg-subtle">
@@ -225,7 +229,7 @@ export default function AnalyticsPage() {
               ))}
             </tbody>
           </table>
-        </div>
+        </Reloading>
       </section>
     </div>
   )

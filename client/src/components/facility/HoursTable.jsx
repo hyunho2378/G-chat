@@ -1,6 +1,7 @@
 // 요일별 운영시간. 휴관일은 danger-text, 오늘 행은 primary-soft 배경.
 import clsx from 'clsx'
 import { useLang } from '../../i18n/LangContext.jsx'
+import { hoursText } from '../../lib/lang.js'
 import { TONE_TEXT, statusTone } from '../dashboard/StatusPill.jsx'
 
 const DAYS = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun']
@@ -25,8 +26,9 @@ export default function HoursTable({ hours = {}, className }) {
               <th scope="row" className="w-16 px-3 py-2.5 type-caption font-semibold text-text-meta">
                 {t(`facility.day.${d}`)}
               </th>
+              {/* 데이터의 휴관 표기는 한국어 원문이라 그대로 두면 언어를 바꿔도 남는다. 상태 라벨로 바꿔 그린다 */}
               <td className={clsx('px-3 py-2.5 type-body-sm', closed ? TONE_TEXT[statusTone('closed')] : 'text-text-pri')}>
-                {value}
+                {hoursText(value, t)}
               </td>
             </tr>
           )

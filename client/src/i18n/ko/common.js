@@ -112,6 +112,14 @@ export default {
       list: "공지 목록"
     },
     faq: {
+      cat: {
+        hours: "운영시간",
+        fee: "요금",
+        reserve: "예약",
+        guide: "이용안내",
+        way: "찾아오는길",
+        closed: "휴관"
+      },
       title: "자주 묻는 질문",
       subtitle: "많이 묻는 질문과 답변을 모았습니다",
       askMore: "더 자세히 물어보기",

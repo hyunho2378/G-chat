@@ -2,14 +2,16 @@
 // 다른 파일에서 상태 색 매핑을 다시 정의하지 않는다(PATTERNS.md 절대 금지 패턴).
 import clsx from 'clsx'
 
+// 7단계. 상태 넷은 정색 배경 + 흰 글자다. soft 배경 + 진한 글자는 화면에서 읽히지 않았다.
+// 네 정색은 tokens 에서 흰 배경 대비 4.5:1 이상이라 흰 글자 대비도 같은 값이다.
+// neutral 만 soft 로 남는다. 상태가 아니라 값 없음 표기이고, 사진 위 배지가 bg 를 덮어쓰기 때문이다
 const PILL = {
-  success: 'bg-success-soft text-success-text',
-  warning: 'bg-warning-soft text-warning-text',
-  danger: 'bg-danger-soft text-danger-text',
-  info: 'bg-info-soft text-info-text',
+  success: 'bg-success text-text-inverse',
+  warning: 'bg-warning text-text-inverse',
+  danger: 'bg-danger text-text-inverse',
+  info: 'bg-info text-text-inverse',
   neutral: 'bg-mute text-text-sec'
 }
-const DOT = { success: 'bg-success', warning: 'bg-warning', danger: 'bg-danger', info: 'bg-info', neutral: 'bg-text-ter' }
 
 // 필이 아닌 자리(KPI 목표 문구, 운영시간 표, 예약 셀)도 여기서 색을 받아 간다.
 // 상태에서 색으로 가는 길은 이 파일 하나뿐이어야 한다
@@ -47,11 +49,10 @@ export default function StatusPill({ status, label, size = 'md', className }) {
   const tone = statusTone(status)
   return (
     <span className={clsx(
-      'inline-flex items-center gap-1.5 px-2 rounded-xs type-caption whitespace-nowrap',
+      'inline-flex items-center px-2 rounded-xs type-caption font-medium whitespace-nowrap',
       size === 'sm' ? 'h-5' : 'h-6',
       PILL[tone], className
     )}>
-      <span className={clsx('w-2 h-2 rounded-full', DOT[tone])} aria-hidden="true" />
       {label || statusLabel(status)}
     </span>
   )

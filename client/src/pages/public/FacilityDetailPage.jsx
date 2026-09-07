@@ -5,6 +5,7 @@ import { Link, useParams, useSearchParams } from 'react-router-dom'
 import { useLang } from '../../i18n/LangContext.jsx'
 import { get } from '../../lib/api.js'
 import { formatPrice } from '../../lib/format.js'
+import { facilityName } from '../../lib/lang.js'
 import Button from '../../components/ui/Button.jsx'
 import EmptyState from '../../components/ui/EmptyState.jsx'
 import Skeleton from '../../components/ui/Skeleton.jsx'
@@ -16,7 +17,7 @@ const TABS = ['guide', 'fee', 'reserve', 'map']
 const TAB_KEY = { guide: 'facility.detail.tabGuide', fee: 'facility.detail.tabFee', reserve: 'facility.detail.tabReserve', map: 'facility.detail.tabMap' }
 
 export default function FacilityDetailPage() {
-  const { t } = useLang()
+  const { t, lang } = useLang()
   const { id } = useParams()
   const [params, setParams] = useSearchParams()
   const tab = TABS.includes(params.get('tab')) ? params.get('tab') : 'guide'
@@ -59,9 +60,11 @@ export default function FacilityDetailPage() {
         <div className="min-w-0">
           <div className="flex flex-wrap items-start justify-between gap-3">
             <div className="min-w-0">
-              <h1 className="type-h1 text-text-pri">{facility.name}</h1>
+              <h1 className="type-h1 text-text-pri">{facilityName(facility, lang)}</h1>
+              {/* 주소와 이용 안내 원문과 부서명은 번역하지 않는다(mock/README 원문 무결성).
+                  대신 lang 을 박아 이 부분만 한국어임을 선언한다(WCAG 3.1.2 Language of Parts) */}
               <p className="mt-2 inline-flex items-center gap-1.5 type-body-sm text-text-sec">
-                <MapPin size={16} aria-hidden="true" className="text-text-meta" />{facility.address}
+                <MapPin size={16} aria-hidden="true" className="text-text-meta" /><span lang="ko">{facility.address}</span>
               </p>
             </div>
             <StatusPill status={facility.status} label={t(`common.status.${facility.status}`)} />
@@ -76,7 +79,7 @@ export default function FacilityDetailPage() {
           <div className="mt-6">
             {tab === 'guide' && (
               <div className="space-y-6">
-                <p className="type-body text-text-sec max-w-text whitespace-pre-wrap">{facility.guide}</p>
+                <p lang="ko" className="type-body text-text-sec max-w-text whitespace-pre-wrap">{facility.guide}</p>
                 <section>
                   <h2 className="type-h2 text-text-pri">{t('facility.detail.hours')}</h2>
                   <div className="mt-3 rounded-lg bg-page shadow-card overflow-hidden"><HoursTable hours={facility.hours} /></div>
@@ -126,7 +129,7 @@ export default function FacilityDetailPage() {
                 <p className="type-body text-text-sec">{t('facility.detail.directions')}</p>
                 <dl className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-2">
                   <dt className="type-caption text-text-meta">{t('facility.detail.address')}</dt>
-                  <dd className="type-body-sm text-text-pri">{facility.address}</dd>
+                  <dd lang="ko" className="type-body-sm text-text-pri">{facility.address}</dd>
                   <dt className="type-caption text-text-meta">{t('facility.detail.phone')}</dt>
                   <dd className="type-body-sm">
                     <a href={`tel:${facility.phone}`} className="inline-flex items-center gap-1.5 text-primary hover:text-primary-hover transition-colors duration-fast">
@@ -151,7 +154,7 @@ export default function FacilityDetailPage() {
             <dl className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-2">
               <dt className="type-caption text-text-meta">{t('facility.detail.department')}</dt>
               <dd className="type-body-sm text-text-sec inline-flex items-center gap-1.5">
-                <Users size={16} aria-hidden="true" className="text-text-meta" />{facility.department}
+                <Users size={16} aria-hidden="true" className="text-text-meta" /><span lang="ko">{facility.department}</span>
               </dd>
               <dt className="type-caption text-text-meta">{t('facility.detail.phone')}</dt>
               <dd className="type-body-sm text-text-sec">{facility.phone}</dd>

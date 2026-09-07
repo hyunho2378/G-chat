@@ -36,6 +36,10 @@ export default {
       notFound: "Facility not found",
       openMap: "Open in map"
     },
+    hours: {
+      allDay: "Open 24 hours",
+      stay: "Check in {in}, check out {out}"
+    },
     day: {
       mon: "Mon",
       tue: "Tue",

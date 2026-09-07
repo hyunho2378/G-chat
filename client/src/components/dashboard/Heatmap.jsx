@@ -5,8 +5,10 @@ import { useLang } from '../../i18n/LangContext.jsx'
 import { formatNumber } from '../../lib/format.js'
 
 const DAYS = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat']
-// 5단계. 색으로만 뜻을 전하지 않도록 셀마다 title 로 건수를 붙인다
-const STEPS = ['bg-mute', 'bg-primary/20', 'bg-primary/40', 'bg-primary/65', 'bg-primary']
+const STEPS = ['bg-mute', 'bg-chart-heat-1', 'bg-chart-heat-2', 'bg-chart-heat-3', 'bg-chart-heat-4']
+// 5단계. 색으로만 뜻을 전하지 않도록 셀마다 title 로 건수를 붙인다.
+// 7단계. 알파(primary/20 등)를 흰 면에 겹치면 채도가 빠져 단계가 뿌예졌다. tokens 의 실색 4단계로 바꿨다.
+// 0 은 데이터 없음이라 색 단계가 아니다
 
 export default function Heatmap({ matrix = [], ariaLabel }) {
   const { t } = useLang()

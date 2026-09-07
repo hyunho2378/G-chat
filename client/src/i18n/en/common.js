@@ -112,6 +112,14 @@ export default {
       list: "Notice list"
     },
     faq: {
+      cat: {
+        hours: "Hours",
+        fee: "Fees",
+        reserve: "Reservations",
+        guide: "Guide",
+        way: "Directions",
+        closed: "Closures"
+      },
       title: "FAQ",
       subtitle: "The questions we are asked most, with answers",
       askMore: "Ask in more detail",

@@ -82,6 +82,11 @@
 .skeleton-bar-2 { animation-delay: 0.18s; }
 .skeleton-bar-3 { animation-delay: 0.36s; }
 
+/* word-break: keep-all(break-keep)은 한국어 어절을 안 끊으려는 규칙이다.
+   일본어 중국어는 낱말 사이에 공백이 없어 그대로 두면 줄이 아예 안 바뀌고 컨테이너를 넘친다.
+   두 언어에서만 일반 줄바꿈으로 되돌린다(7단계) */
+html[lang='ja'] .break-keep, html[lang='zh'] .break-keep { word-break: normal; line-break: strict; }
+
 /* tokens.contrastOverrides. 컴포넌트가 CSS 변수를 쓰지 않으므로 유틸리티 재정의로 최소 적용한다 */
 @media (prefers-contrast: more) {
   .border-line-sub { border-color: theme('colors.line.def'); }

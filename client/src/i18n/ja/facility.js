@@ -36,6 +36,10 @@ export default {
       notFound: "施設が見つかりません",
       openMap: "地図で見る"
     },
+    hours: {
+      allDay: "24時間",
+      stay: "チェックイン {in} チェックアウト {out}"
+    },
     day: {
       mon: "月",
       tue: "火",

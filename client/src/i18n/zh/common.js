@@ -112,6 +112,14 @@ export default {
       list: "公告列表"
     },
     faq: {
+      cat: {
+        hours: "开放时间",
+        fee: "费用",
+        reserve: "预约",
+        guide: "使用指南",
+        way: "交通路线",
+        closed: "闭馆"
+      },
       title: "常见问题",
       subtitle: "汇总了最常被问到的问题与解答",
       askMore: "进一步咨询",
