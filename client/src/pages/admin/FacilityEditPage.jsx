@@ -56,7 +56,7 @@ export default function FacilityEditPage() {
   const save = async (e) => {
     e.preventDefault()
     await (isNew ? post('/api/admin/facilities', form) : put(`/api/admin/facilities/${id}`, form)).catch(() => {})
-    toast(t('admin.facilities.saved'), 'success')
+    toast(t('admin.facilities.saved'), 'primary')
     navigate('/admin/facilities')
   }
 
@@ -116,7 +116,7 @@ export default function FacilityEditPage() {
           />
         </div>
         <div className="flex flex-wrap items-center gap-3">
-          <Button type="button" size="sm" variant="secondary" onClick={() => toast(t('admin.facilities.saved'), 'info')}>
+          <Button type="button" size="sm" variant="secondary" onClick={() => toast(t('admin.facilities.saved'), 'neutral')}>
             {t('admin.facilities.testConnection')}
           </Button>
           <span className="type-caption text-text-meta">{t('admin.facilities.integrationState')}</span>

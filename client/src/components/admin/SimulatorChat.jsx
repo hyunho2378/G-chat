@@ -94,7 +94,7 @@ export default function SimulatorChat({ samples = [], lang = 'ko', facilityId, c
                         return (
                           <section key={`a${g.id}`} className="mt-4 rounded-lg bg-subtle p-3">
                             <div className="flex flex-wrap items-center gap-2">
-                              <Badge tone="warning">{t('admin.simulator.simBadge')}</Badge>
+                              <Badge>{t('admin.simulator.simBadge')}</Badge>
                               <span className="min-w-0 type-body-sm font-medium text-text-pri truncate">{g.title}</span>
                             </div>
                             {g.lines?.length > 0 && (

@@ -79,7 +79,7 @@ export default function NoticesAdminPage() {
 
   // 저장은 서버가 한다. 응답이 공지 목록과 지식베이스 색인을 함께 갱신한 결과다
   const save = async () => {
-    if (!form.title.trim()) { toast(t('admin.notices.requiredTitle'), 'warning'); return }
+    if (!form.title.trim()) { toast(t('admin.notices.requiredTitle'), 'danger'); return }
     setIndexNode({ kind: 'tool', id: 'ix', tool: 'knowledge', phase: 'running', label: t('admin.notices.indexing'), detail: form.title })
     const body = {
       title: form.title, body: form.body, facilityIds: form.facilityIds,
@@ -92,7 +92,7 @@ export default function NoticesAdminPage() {
       setRows((prev) => (form.id ? prev.map((r) => (r.id === saved.id ? saved : r)) : [saved, ...prev]))
       setForm(saved)
       setIndexNode({ kind: 'tool', id: 'ix', tool: 'knowledge', phase: 'done', label: t('admin.notices.indexing'), summary: t('admin.notices.indexDone') })
-      toast(t('admin.notices.saved'), 'success')
+      toast(t('admin.notices.saved'), 'primary')
     } catch (e) {
       setIndexNode({ kind: 'tool', id: 'ix', tool: 'knowledge', phase: 'error', label: t('admin.notices.indexing'), message: e.error?.message })
       toast(e.error?.message || t('common.error.network'), 'danger')

@@ -57,7 +57,7 @@ export default function DashboardPage() {
   const series = useMemo(() => (kpi ? [
     { key: 'auto', name: t('common.status.auto'), points: kpi.trend.auto, stroke: 'stroke-chart-1', fill: 'fill-chart-1', dot: 'bg-chart-1' },
     { key: 'handoff', name: t('common.status.handoff'), points: kpi.trend.handoff, stroke: 'stroke-chart-2', fill: 'fill-chart-2', dot: 'bg-chart-2' },
-    { key: 'unresolved', name: t('common.status.unresolved'), points: kpi.trend.unresolved, stroke: 'stroke-chart-3', fill: 'fill-chart-3', dot: 'bg-chart-3', dash: '6 4' }
+    { key: 'unresolved', name: t('common.status.unresolved'), points: kpi.trend.unresolved, stroke: 'stroke-danger', fill: 'fill-danger', dot: 'bg-danger', dash: '6 4' }
   ] : []), [kpi, t])
 
   if (!kpi) {

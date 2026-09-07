@@ -1,15 +1,16 @@
 // 전역 큐를 그린다. App.jsx 에 한 번만 마운트한다. 문구는 useToast 로 넣는다.
 import clsx from 'clsx'
-import { AlertTriangle, Check, Info, X, XCircle } from 'lucide-react'
+import { Check, Info, X, XCircle } from 'lucide-react'
 import { useToastStore } from '../../hooks/useToast.js'
 
+// 9단계. 톤은 셋이다. neutral 은 그냥 알림, primary 는 완료, danger 는 실패와 입력 오류다.
+// 초록 완료 토스트와 주황 경고 토스트는 없앴다
 const TONE = {
-  success: 'bg-success-soft text-success-text',
-  warning: 'bg-warning-soft text-warning-text',
-  danger: 'bg-danger-soft text-danger-text',
-  info: 'bg-info-soft text-info-text'
+  neutral: 'bg-mute text-text-sec',
+  primary: 'bg-primary-soft text-primary-text',
+  danger: 'bg-danger-soft text-danger-text'
 }
-const ICON = { success: Check, warning: AlertTriangle, danger: XCircle, info: Info }
+const ICON = { neutral: Info, primary: Check, danger: XCircle }
 
 export default function Toast() {
   const toasts = useToastStore((s) => s.toasts)
@@ -24,7 +25,7 @@ export default function Toast() {
       {toasts.map((t) => {
         const Icon = ICON[t.tone] || Info
         return (
-          <div key={t.id} className={clsx('toast-item flex items-start gap-2 p-3 rounded-md shadow-float', TONE[t.tone] || TONE.info)}>
+          <div key={t.id} className={clsx('toast-item flex items-start gap-2 p-3 rounded-md shadow-float', TONE[t.tone] || TONE.neutral)}>
             <Icon size={16} className="mt-0.5 shrink-0" aria-hidden="true" />
             <p className="flex-1 min-w-0 type-body-sm">{t.message}</p>
             <button type="button" aria-label="알림 닫기" onClick={() => dismiss(t.id)} className="shrink-0">

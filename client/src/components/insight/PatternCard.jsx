@@ -16,7 +16,7 @@ export default function PatternCard({ pattern, facilityName }) {
   return (
     <article className="flex flex-col bg-page rounded-lg shadow-card p-4 lg:p-5">
       <div className="flex flex-wrap items-center gap-2">
-        <Badge tone={high ? 'warning' : 'neutral'}>
+        <Badge tone={high ? 'primary' : 'neutral'}>
           {t(high ? 'admin.pattern.severityHigh' : 'admin.pattern.severityMedium')}
         </Badge>
         {facilityName && <span className="min-w-0 type-meta text-text-meta truncate">{facilityName}</span>}
@@ -38,7 +38,7 @@ export default function PatternCard({ pattern, facilityName }) {
 
       <p className="mt-4 pt-3 border-t border-line-sub type-caption tabular-nums">
         <span className="text-text-meta">{t('admin.pattern.effectLabel')}</span>
-        <span className={`ml-2 ${TONE_TEXT.success}`}>{t(`admin.pattern.${p}Effect`, { value: pattern.effect.value })}</span>
+        <span className={`ml-2 ${TONE_TEXT.primary}`}>{t(`admin.pattern.${p}Effect`, { value: pattern.effect.value })}</span>
       </p>
     </article>
   )

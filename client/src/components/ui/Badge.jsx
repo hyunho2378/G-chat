@@ -1,13 +1,11 @@
 import clsx from 'clsx'
 
-// 8단계. StatusPill 과 같은 규칙이다. 연한 tint 배경 + 채도 있는 진한 글자.
-// 점은 두지 않는다. 배지는 상태가 아니라 종류 라벨이다
+// StatusPill 과 같은 규칙이다. 연한 tint 배경 + 진한 글자, 점은 두지 않는다(종류 라벨이지 상태가 아니다).
+// 9단계. 톤은 중립 주목 위험 셋뿐이다. 초록과 주황은 없다
 const TONE = {
-  success: 'bg-success-soft text-success-text',
-  warning: 'bg-warning-soft text-warning-text',
-  danger: 'bg-danger-soft text-danger-text',
-  info: 'bg-info-soft text-info-text',
-  neutral: 'bg-mute text-text-sec'
+  neutral: 'bg-mute text-text-sec',
+  primary: 'bg-primary-soft text-primary-text',
+  danger: 'bg-danger-soft text-danger-text'
 }
 
 export default function Badge({ tone = 'neutral', className, children }) {

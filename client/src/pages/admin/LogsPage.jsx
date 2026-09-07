@@ -124,7 +124,7 @@ export default function LogsPage() {
       const saved = await put(`/api/admin/logs/${openId}/review`, { verdict: v, note })
       setDetail((prev) => ({ ...prev, ...saved }))
       setRows((prev) => prev.map((r) => (r.id === openId ? { ...r, review: saved.review?.verdict ?? v } : r)))
-      toast(t('admin.logs.reviewSaved'), 'success')
+      toast(t('admin.logs.reviewSaved'), 'primary')
       if (sampleMode && openIndex >= 0 && rows[openIndex + 1]) setParam('id', rows[openIndex + 1].id)
     } catch (e) {
       toast(e.error?.message || t('common.error.network'), 'danger')

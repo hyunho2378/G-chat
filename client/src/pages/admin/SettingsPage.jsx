@@ -86,7 +86,7 @@ export default function SettingsPage() {
   const save = async (e) => {
     e.preventDefault()
     await put(`/api/admin/settings/${tab}`, form).catch(() => {})
-    toast(t('admin.settings.saved'), 'success')
+    toast(t('admin.settings.saved'), 'primary')
   }
 
   if (!form) {
@@ -176,7 +176,7 @@ export default function SettingsPage() {
             <pre className="overflow-x-auto rounded-md bg-subtle p-3 type-meta text-text-sec"><code>{embedCode}</code></pre>
             <Button
               type="button" variant="secondary" leftIcon={<Copy size={16} aria-hidden="true" />}
-              onClick={() => { navigator.clipboard?.writeText(embedCode); toast(t('admin.channel.copied'), 'success') }}
+              onClick={() => { navigator.clipboard?.writeText(embedCode); toast(t('admin.channel.copied'), 'primary') }}
             >
               {t('admin.channel.copy')}
             </Button>
@@ -191,7 +191,7 @@ export default function SettingsPage() {
               <Input label={t('admin.channel.kakaoId')} value={form.kakao} onChange={(e) => set('kakao', e.target.value)} />
               <Input label={t('admin.channel.kakaoKey')} value={form.kakaoKey || ''} onChange={(e) => set('kakaoKey', e.target.value)} />
             </div>
-            <Button type="button" variant="secondary" onClick={() => toast(t('admin.channel.kakaoTestResult'), 'info')}>
+            <Button type="button" variant="secondary" onClick={() => toast(t('admin.channel.kakaoTestResult'), 'neutral')}>
               {t('admin.channel.kakaoTest')}
             </Button>
           </Section>

@@ -155,7 +155,7 @@ props 없음. useChat 훅과 useChatUi 스토어 사용.
 ### SourcePanel.jsx
 - props: sources[{id, title, kind, updatedAt, url, facilityId}]
 - 헤더 caption: 이 답변의 근거 N건
-- 카드: 종류 Badge(운영 매뉴얼 / 공지 / FAQ / 예약 시스템 / 규정), 제목 h3 line-clamp-1, 갱신일 meta, 90일 초과 시 warning 텍스트 `오래된 자료일 수 있습니다`, 우측 원형 ArrowRight
+- 카드: 종류 Badge(운영 매뉴얼 / 공지 / FAQ / 예약 시스템 / 규정), 제목 h3 line-clamp-1, 갱신일 meta, 90일 초과 시 text-sec 굵은 글자 `오래된 자료일 수 있습니다`(9단계. 경고색을 없애고 무채색 강조로 바꿨다), 우측 원형 ArrowRight
 - 3개까지 노출, 더 보기 버튼
 - 모바일에서는 답변 아래, 상단 line-sub 로 구분
 
@@ -276,7 +276,7 @@ props 없음. useChat 훅과 useChatUi 스토어 사용.
 - variant outline / filled / selected. 높이 32(필터) 40(추천 질문). radius full
 
 ### Badge.jsx
-- tone success / warning / danger / info / neutral. soft 배경 + text 색 짝. radius sm. caption 500
+- tone neutral / primary / danger 셋. soft 배경 + text 색 짝. radius xs. caption 600(9단계)
 
 ### Tabs.jsx
 - variant underline(기본) / pill. 키보드 좌우. 인디케이터 transform 이동

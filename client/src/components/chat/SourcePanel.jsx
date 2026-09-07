@@ -11,7 +11,6 @@ const KIND_KEY = {
   manual: 'admin.kind.manual', notice: 'admin.kind.notice', faq: 'admin.kind.faq',
   reservation: 'admin.kind.reservation', regulation: 'admin.kind.regulation'
 }
-const KIND_TONE = { manual: 'neutral', regulation: 'neutral', faq: 'neutral', reservation: 'neutral', notice: 'info' }
 const VISIBLE = 3
 
 export default function SourcePanel({ sources = [] }) {
@@ -33,13 +32,14 @@ export default function SourcePanel({ sources = [] }) {
             >
               <div className="flex items-start gap-3">
                 <div className="min-w-0 flex-1">
-                  <Badge tone={KIND_TONE[s.kind] || 'neutral'}>
+                  {/* 9단계. 문서 종류는 상태가 아니라 라벨이다. 색으로 나누지 않고 글자로 나눈다 */}
+                  <Badge>
                     {KIND_KEY[s.kind] ? t(KIND_KEY[s.kind]) : s.kind}
                   </Badge>
                   <p className="mt-1.5 type-h3 text-text-pri line-clamp-1">{s.title}</p>
                   <p className="mt-0.5 type-meta text-text-meta">
                     {t('common.meta.updatedAt')} {formatDate(s.updatedAt)}
-                    {isStale(s.updatedAt) && <span className="ml-2 text-warning-text">{t('chat.answer.stale')}</span>}
+                    {isStale(s.updatedAt) && <span className="ml-2 font-medium text-text-sec">{t('chat.answer.stale')}</span>}
                   </p>
                 </div>
                 <span className="shrink-0 self-center w-7 h-7 inline-flex items-center justify-center rounded-full bg-primary-soft text-primary group-hover:bg-primary group-hover:text-text-inverse transition-colors duration-fast">

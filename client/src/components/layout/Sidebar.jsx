@@ -85,7 +85,7 @@ export default function Sidebar({ rail = false, orgName = '', onNavigate }) {
           <m.Icon size={20} aria-hidden="true" className="shrink-0" />
           {!rail && <span className="min-w-0 flex-1 truncate type-body-sm">{t(m.key)}</span>}
           {!rail && m.queue && queue?.[m.queue] > 0 && (
-            <Badge tone="warning" className="tabular-nums">{queue[m.queue]}</Badge>
+            <Badge tone="primary" className="tabular-nums">{queue[m.queue]}</Badge>
           )}
         </>
       )}

@@ -25,7 +25,8 @@ export default function ReviewQueueCard({ queue }) {
             >
               <r.Icon size={20} aria-hidden="true" className="shrink-0 text-text-meta" />
               <span className="min-w-0 flex-1 type-body-sm text-text-sec">{t(r.labelKey)}</span>
-              <Badge tone={queue?.[r.key] > 0 ? 'warning' : 'neutral'} className="tabular-nums">
+              {/* 9단계. 남은 건수가 지금 봐야 할 것이라 주색, 0 이면 중립이다 */}
+              <Badge tone={queue?.[r.key] > 0 ? 'primary' : 'neutral'} className="tabular-nums">
                 {queue?.[r.key] ?? 0}
               </Badge>
               <ArrowRight size={16} aria-hidden="true" className="shrink-0 text-text-ter group-hover:text-text-sec transition-colors duration-fast" />

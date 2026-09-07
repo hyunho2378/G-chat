@@ -6,7 +6,7 @@ let seq = 0
 
 export const useToastStore = create((set) => ({
   toasts: [],
-  push: (message, tone = 'info') => {
+  push: (message, tone = 'neutral') => {
     const id = ++seq
     set((s) => ({ toasts: [...s.toasts, { id, message, tone }] }))
     setTimeout(() => set((s) => ({ toasts: s.toasts.filter((t) => t.id !== id) })), DURATION)

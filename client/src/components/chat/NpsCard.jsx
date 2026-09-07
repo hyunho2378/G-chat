@@ -48,7 +48,7 @@ export default function NpsCard({ sessionId, conversationId, onDone, className }
         )}
       >
         <p className="inline-flex items-center gap-2 type-body-sm text-text-sec">
-          <CheckCircle2 size={16} aria-hidden="true" className="text-success" />
+          <CheckCircle2 size={16} aria-hidden="true" className="text-primary" />
           {t('chat.nps.done')}
         </p>
       </section>

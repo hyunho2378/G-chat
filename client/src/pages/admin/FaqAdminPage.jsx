@@ -70,7 +70,7 @@ export default function FaqAdminPage() {
       setRows((prev) => (edit.id ? prev.map((r) => (r.id === edit.id ? saved : r)) : [saved, ...prev]))
     }
     setEdit(null)
-    toast(t('admin.faq.saved'), 'success')
+    toast(t('admin.faq.saved'), 'primary')
   }
 
   const columns = [

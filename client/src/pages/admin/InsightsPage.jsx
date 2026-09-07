@@ -84,7 +84,7 @@ export default function InsightsPage() {
               <h3 className="type-h3 text-text-pri">{t('admin.insights.chartTitle')}</h3>
               <p className="type-caption text-text-meta tabular-nums">
                 {t('admin.insights.currentValue')}
-                <span className={`ml-1.5 type-h3 ${TONE_TEXT.success}`}>{autoRate.current}{t('admin.unit.percent')}</span>
+                <span className={`ml-1.5 type-h3 ${TONE_TEXT.primary}`}>{autoRate.current}{t('admin.unit.percent')}</span>
               </p>
             </div>
             <div className="mt-3">
@@ -107,7 +107,7 @@ export default function InsightsPage() {
                 days: conversion.windowDays, unresolved: conversion.unresolved, converted: conversion.converted
               })}
             </p>
-            <p className={`mt-2 type-caption tabular-nums ${TONE_TEXT.success}`}>
+            <p className={`mt-2 type-caption tabular-nums ${TONE_TEXT.primary}`}>
               {t('admin.insights.conversionGain', { n: conversion.autoRateGain })}
             </p>
             <p className="mt-1 type-meta text-text-meta tabular-nums">

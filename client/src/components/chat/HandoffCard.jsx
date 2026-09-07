@@ -53,13 +53,13 @@ export default function HandoffCard({ facilityId, messageId }) {
     if (!form.content.trim()) next.content = t('chat.handoffCard.contentRequired')
     setErrors(next)
     if (Object.keys(next).length) return
-    if (!consent) { toast(t('chat.handoffCard.consentRequired'), 'warning'); return }
+    if (!consent) { toast(t('chat.handoffCard.consentRequired'), 'danger'); return }
 
     setSending(true)
     try {
       const res = await post('/api/handoff', { messageId, facilityId, ...form, consent })
       setResult(res || {})
-      toast(t('chat.handoffCard.done'), 'success')
+      toast(t('chat.handoffCard.done'), 'primary')
     } catch (err) {
       toast(err.error?.message || t('common.error.network'), 'danger')
     } finally {
@@ -97,7 +97,7 @@ export default function HandoffCard({ facilityId, messageId }) {
 
       {result ? (
         <div className="mt-4 pt-4 border-t border-line-sub">
-          <p className="type-body-sm font-medium text-success-text">{t('chat.handoffCard.done')}</p>
+          <p className="type-body-sm font-medium text-primary-text">{t('chat.handoffCard.done')}</p>
           {result.ticketId && (
             <p className="mt-1 type-meta text-text-meta tabular-nums">
               {t('chat.handoffCard.ticket')} {result.ticketId}

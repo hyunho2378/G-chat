@@ -48,7 +48,7 @@ export default function KpiCard({ label, value, decimals = 0, unit, delta, delta
         {unit && <span className="ml-1 type-h3 text-text-meta">{unit}</span>}
       </p>
       <div className="mt-3 flex flex-wrap items-center gap-2">
-        <span className={clsx('inline-flex items-center gap-1 type-caption tabular-nums', good ? 'text-success-text' : 'text-danger-text')}>
+        <span className={clsx('inline-flex items-center gap-1 type-caption tabular-nums', good ? 'text-text-sec' : 'text-danger-text')}>
           {up ? <ArrowUp size={16} aria-hidden="true" /> : <ArrowDown size={16} aria-hidden="true" />}
           {Math.abs(delta)}{deltaUnit ?? unit}
         </span>

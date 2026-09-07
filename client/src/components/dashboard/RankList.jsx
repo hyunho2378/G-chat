@@ -18,12 +18,14 @@ export default function RankList({ items = [], onAction, actionLabel }) {
         return (
           <li key={it.rank}>
             <div className="flex items-center gap-3">
-              <span className={clsx('w-5 shrink-0 type-body-sm font-semibold tabular-nums', it.rank <= 3 ? 'text-primary-text' : 'text-text-ter')}>
+              {/* 9단계. 강조는 1등 하나다. 2등 이하는 무채색이다 */}
+              <span className={clsx('w-5 shrink-0 type-body-sm font-semibold tabular-nums', it.rank === 1 ? 'text-primary-text' : 'text-text-ter')}>
                 {it.rank}
               </span>
               <span className="min-w-0 flex-1 truncate type-body-sm text-text-pri">{it.label}</span>
               <span className="shrink-0 type-h3 text-text-pri tabular-nums">{formatNumber(it.count)}</span>
-              <span className={clsx('shrink-0 inline-flex items-center gap-0.5 w-14 justify-end type-caption tabular-nums', up ? 'text-success-text' : 'text-danger-text')}>
+              {/* 증감은 화살표 방향이 전한다. 늘어난 질문이 나쁜 것도 좋은 것도 아니라 색을 쓰지 않는다 */}
+              <span className="shrink-0 inline-flex items-center gap-0.5 w-14 justify-end type-caption tabular-nums text-text-meta">
                 {up ? <ArrowUp size={12} aria-hidden="true" /> : <ArrowDown size={12} aria-hidden="true" />}
                 {Math.abs(it.delta)}
               </span>
@@ -34,7 +36,10 @@ export default function RankList({ items = [], onAction, actionLabel }) {
               )}
             </div>
             <div className="mt-1.5 ml-8 h-1.5 rounded-full bg-line-sub" aria-hidden="true">
-              <div className="h-full rounded-full bg-chart-1" style={{ width: `${(it.count / max) * 100}%` }} />
+              <div
+                className={clsx('h-full rounded-full', it.rank === 1 ? 'bg-primary' : 'bg-line-strong')}
+                style={{ width: `${(it.count / max) * 100}%` }}
+              />
             </div>
           </li>
         )

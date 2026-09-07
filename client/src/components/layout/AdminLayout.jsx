@@ -40,9 +40,9 @@ export default function AdminLayout() {
   return (
     <div className="min-h-screen bg-canvas">
       {isNarrow && !bannerDismissed && (
-        <div className="flex items-center gap-2 bg-warning-soft px-4 py-2 text-warning-text">
+        <div className="flex items-center gap-2 bg-mute px-4 py-2 text-text-sec">
           <p className="min-w-0 flex-1 type-caption">{t('admin.desktopBanner')}</p>
-          <IconButton size="sm" aria-label={t('common.action.close')} onClick={dismissBanner} className="text-warning-text">
+          <IconButton size="sm" aria-label={t('common.action.close')} onClick={dismissBanner} className="text-text-sec">
             <X size={16} aria-hidden="true" />
           </IconButton>
         </div>

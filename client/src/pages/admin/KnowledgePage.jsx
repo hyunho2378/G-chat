@@ -81,7 +81,7 @@ export default function KnowledgePage() {
     try {
       const res = await put(`/api/admin/knowledge/pending/${row.id}`, { action })
       setHandled((prev) => ({ ...prev, [row.id]: res.action === 'reject' ? 'reject' : 'approve' }))
-      toast(t(res.action === 'reject' ? 'admin.knowledge.rejected' : 'admin.knowledge.approved'), res.action === 'reject' ? 'warning' : 'success')
+      toast(t(res.action === 'reject' ? 'admin.knowledge.rejected' : 'admin.knowledge.approved'), res.action === 'reject' ? 'danger' : 'primary')
     } catch (e) {
       toast(e.error?.message || t('common.error.network'), 'danger')
     }
@@ -90,7 +90,7 @@ export default function KnowledgePage() {
   const reindex = async () => {
     const next = await post('/api/admin/knowledge/reindex').catch(() => null)
     if (next) setIndex(next)
-    toast(t('admin.knowledge.reindexStarted'), 'info')
+    toast(t('admin.knowledge.reindexStarted'), 'neutral')
   }
 
   const upload = async (e) => {
@@ -98,7 +98,7 @@ export default function KnowledgePage() {
     const doc = await post('/api/admin/knowledge/docs', form).catch(() => null)
     if (doc) setDocs((prev) => [doc, ...prev])
     setModal(false)
-    toast(t('admin.knowledge.approved'), 'success')
+    toast(t('admin.knowledge.approved'), 'primary')
   }
 
   const openId = params.get('id')
@@ -291,7 +291,7 @@ export default function KnowledgePage() {
         {openDoc && (
           <div className="space-y-6">
             {stale && (
-              <p className="rounded-md bg-warning-soft px-3 py-2 type-body-sm text-warning-text">{t('admin.docDrawer.stale')}</p>
+              <p className="rounded-md bg-mute px-3 py-2 type-body-sm text-text-sec">{t('admin.docDrawer.stale')}</p>
             )}
 
             <section>

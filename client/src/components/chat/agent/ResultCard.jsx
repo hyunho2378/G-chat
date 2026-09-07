@@ -22,7 +22,7 @@ export default function ResultCard({ result }) {
     return (
       <section className="mt-4 bg-page rounded-lg shadow-card p-4 lg:p-5 animate-flow-down-late" aria-label={t('chat.agent.resvTitle')}>
         <p className="inline-flex items-center gap-2 type-h3 text-text-pri">
-          <CheckCircle2 size={20} aria-hidden="true" className="text-success" />
+          <CheckCircle2 size={20} aria-hidden="true" className="text-primary" />
           {t('chat.agent.resvTitle')}
         </p>
         <p className="mt-3 type-kpi text-text-pri tabular-nums">{r.code}</p>
@@ -57,7 +57,7 @@ export default function ResultCard({ result }) {
     return (
       <section className="mt-4 bg-page rounded-lg shadow-card p-4 lg:p-5 animate-flow-down-late" aria-label={t('chat.agent.ticketTitle')}>
         <p className="inline-flex items-center gap-2 type-h3 text-text-pri">
-          <CheckCircle2 size={20} aria-hidden="true" className="text-success" />
+          <CheckCircle2 size={20} aria-hidden="true" className="text-primary" />
           {t('chat.agent.ticketTitle')}
         </p>
         <p className="mt-3 type-kpi text-text-pri tabular-nums">{ticket.ticketId}</p>

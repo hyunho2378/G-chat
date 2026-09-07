@@ -7,7 +7,7 @@ import { addDays, format } from 'date-fns'
 import { useLang } from '../../i18n/LangContext.jsx'
 import IconButton from '../ui/IconButton.jsx'
 import Button from '../ui/Button.jsx'
-import StatusPill, { TONE_FILL, statusTone } from './StatusPill.jsx'
+import { cellFill } from './StatusPill.jsx'
 const WEEKDAY = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat']
 const STATES = ['open', 'booked', 'full', 'maintenance']
 
@@ -56,7 +56,7 @@ export default function WeekCalendar({ from, hours = [], days = [], onPrev, onNe
                   {row.map((state, h) => (
                     <td key={h} className="p-0">
                       <span
-                        className={clsx('block h-8 w-10 rounded-xs', TONE_FILL[statusTone(state)])}
+                        className={clsx('block h-8 w-10 rounded-xs', cellFill(state))}
                         title={`${format(date, 'MM.dd')} ${hours[h]} ${t(`common.status.${state}`)}`}
                       />
                     </td>
@@ -70,7 +70,13 @@ export default function WeekCalendar({ from, hours = [], days = [], onPrev, onNe
 
       <div className="mt-4 flex flex-wrap items-center gap-2">
         <span className="type-caption text-text-meta">{t('admin.reservations.legend')}</span>
-        {STATES.map((s) => <StatusPill key={s} size="sm" status={s} label={t(`common.status.${s}`)} />)}
+        {/* 범례 견본은 셀과 같은 면을 쓴다. 필을 쓰면 유지보수 셀 색과 범례 색이 어긋난다 */}
+        {STATES.map((s) => (
+          <span key={s} className="inline-flex items-center gap-1.5 type-caption text-text-sec">
+            <span aria-hidden="true" className={clsx('h-3 w-5 rounded-xs', cellFill(s))} />
+            {t(`common.status.${s}`)}
+          </span>
+        ))}
       </div>
     </div>
   )

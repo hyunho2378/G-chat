@@ -115,7 +115,7 @@ TopNav 우측 LangSwitch. 한국어 / English / 日本語 / 中文. 이번 범�
 | 담당자 응대시간 | 인계 건 평균 처리 시간, 도입 전 대비 | 50% 감소 | H3 |
 | 응답 정확도 | 주간 Human Review 샘플 정답률 | 90% 유지 | H4 |
 
-각 카드: 라벨, 숫자, 전기간 대비 증감, 목표 대비 상태(달성 success / 근접 warning / 미달 danger). 클릭하면 분석 화면 해당 탭.
+각 카드: 라벨, 숫자, 전기간 대비 증감, 목표 대비 상태(달성 neutral / 근접 neutral / 미달 danger). 클릭하면 분석 화면 해당 탭.
 
 **중단 (2열, 좌 2fr 우 1fr)**
 - 좌: 상담량 추이 꺾은선. 자동처리 / 인계 / 미해결 3계열. 기간 탭 7일 30일 분기
@@ -226,14 +226,18 @@ TopNav 우측 LangSwitch. 한국어 / English / 日本語 / 中文. 이번 범�
 
 | 도메인 | 상태 값 | 필 색 |
 |--------|--------|------|
-| 시설 운영 | 정상 / 유지보수 / 휴관 | success / warning / danger |
-| 예약 가능 | 여유 / 안정적 / 제한됨 / 마감 | success / success / warning / danger |
-| 예약 셀(예약 현황 캘린더) | 예약 가능 / 예약됨 / 마감 / 점검 | success / info / danger / warning |
-| 상담 처리 | 자동처리 / 인계 / 미해결 | success / info / warning |
-| 인계 진행 | 대기 / 처리 중 / 완료 | warning / info / success |
-| 색인 | 색인됨 / 대기 / 실패 | success / warning / danger |
-| 리뷰 판정 | 정답 / 오답 / 보류 | success / danger / warning |
-| KPI 목표 | 달성 / 근접 / 미달 | success / warning / danger |
+| 시설 운영 | 정상 / 유지보수 / 휴관 | neutral / neutral / danger |
+| 예약 가능 | 여유 / 안정적 / 제한됨 / 마감 | neutral / neutral / neutral / danger |
+| 예약 셀(예약 현황 캘린더) | 예약 가능 / 예약됨 / 마감 / 점검 | neutral / primary / danger / neutral(진한 면) |
+| 상담 처리 | 자동처리 / 인계 / 미해결 | neutral / primary / danger |
+| 인계 진행 | 대기 / 처리 중 / 완료 | neutral / primary / neutral |
+| 색인 | 색인됨 / 대기 / 실패 | neutral / neutral / danger |
+| 리뷰 판정 | 정답 / 오답 / 보류 | neutral / danger / neutral |
+| KPI 목표 | 달성 / 근접 / 미달 | neutral / neutral / danger |
+
+9단계(2026-09-07)에서 KRDS 3색 체계로 재매핑했다. 톤은 **중립(무채색) / 주목(primary) / 위험(danger)** 셋뿐이다.
+success(초록)와 warning(주황)과 info 토큰은 지웠다. 정상과 완료와 대기는 강조할 것이 아니라 기본이라 무채색이다.
+예약 셀은 라벨을 넣을 수 없어 중립을 명도 두 단계로 나눈다(여유 mute, 유지보수 line-def). StatusPill.cellFill 이 그 단일 출처다.
 
 예약 셀의 booked(예약됨)는 API_CONTRACT 의 `open|booked|full|maintenance` 를 받는다. 색 매핑은 StatusPill.jsx 한 곳이다.
 

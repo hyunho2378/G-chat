@@ -69,7 +69,7 @@ export default function ReportsPage() {
       }, ...prev]
     })
     setCreating(false)
-    toast(t('admin.reports.createDone', { period }), 'success')
+    toast(t('admin.reports.createDone', { period }), 'primary')
   }
 
   const columns = [
@@ -136,7 +136,7 @@ export default function ReportsPage() {
         open={!!open} onClose={() => setOpen(null)}
         title={open ? t('admin.reports.reportTitle', { period: open.period }) : ''}
         footer={(
-          <Button variant="secondary" leftIcon={<Download size={16} aria-hidden="true" />} onClick={() => toast(t('admin.reports.download'), 'info')}>
+          <Button variant="secondary" leftIcon={<Download size={16} aria-hidden="true" />} onClick={() => toast(t('admin.reports.download'), 'neutral')}>
             {t('admin.reports.download')}
           </Button>
         )}

@@ -117,7 +117,7 @@ export default function AnalyticsPage() {
   const series = useMemo(() => (data ? [
     { key: 'auto', name: t('common.status.auto'), points: data.trend.auto, stroke: 'stroke-chart-1', fill: 'fill-chart-1', dot: 'bg-chart-1' },
     { key: 'handoff', name: t('common.status.handoff'), points: data.trend.handoff, stroke: 'stroke-chart-2', fill: 'fill-chart-2', dot: 'bg-chart-2' },
-    { key: 'unresolved', name: t('common.status.unresolved'), points: data.trend.unresolved, stroke: 'stroke-chart-3', fill: 'fill-chart-3', dot: 'bg-chart-3', dash: '6 4' }
+    { key: 'unresolved', name: t('common.status.unresolved'), points: data.trend.unresolved, stroke: 'stroke-danger', fill: 'fill-danger', dot: 'bg-danger', dash: '6 4' }
   ] : []), [data, t])
 
   const count = (key, label) => Object.entries(

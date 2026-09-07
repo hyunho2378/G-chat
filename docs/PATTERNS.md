@@ -58,17 +58,14 @@ border 클래스를 카드에 쓰지 않는다. shadow-card 링이 경계다. ho
 ## 5. 상태 필
 
 ```jsx
-// 8단계. 연한 tint 배경 + 채도 있는 진한 글자 + 작은 정색 점.
-// 7단계의 정색 배경 + 흰 글자는 대비를 맞추느라 색을 어둡게 눌러 화면이 탁해져 되돌렸다.
-// 글자는 soft 배경 위 4.5:1 을 넘는다(DESIGN.md 시스템 색 표)
+// 9단계. KRDS 3색 체계. 톤은 중립 주목 위험 셋뿐이다. 초록과 주황은 없다.
+// 정상과 완료와 대기는 강조할 것이 아니라 기본이라 중립이다
 const PILL = {
-  success: 'bg-success-soft text-success-text',
-  warning: 'bg-warning-soft text-warning-text',
-  danger:  'bg-danger-soft text-danger-text',
-  info:    'bg-info-soft text-info-text',
-  neutral: 'bg-mute text-text-sec'
+  neutral: 'bg-mute text-text-sec',
+  primary: 'bg-primary-soft text-primary-text',
+  danger:  'bg-danger-soft text-danger-text'
 }
-const DOT = { success: 'bg-success', warning: 'bg-warning', danger: 'bg-danger', info: 'bg-info', neutral: 'bg-text-ter' }
+const DOT = { neutral: 'bg-text-meta', primary: 'bg-primary', danger: 'bg-danger' }
 
 <span className={`inline-flex items-center gap-1.5 h-6 px-2 rounded-xs type-caption ${PILL[tone]}`}>
   <span className={`h-1.5 w-1.5 shrink-0 rounded-full ${DOT[tone]}`} aria-hidden="true" />
@@ -77,11 +74,18 @@ const DOT = { success: 'bg-success', warning: 'bg-warning', danger: 'bg-danger',
 ```
 
 점은 장식이라 aria-hidden 이다. 색으로만 뜻을 전하지 않는다는 규칙은 필 안 텍스트 라벨이 지킨다.
-Badge 는 종류 라벨이라 점 없이 tint + 진한 글자만 쓴다.
 상태 문자열 → tone 매핑은 StatusPill.jsx 한 곳. IA.md 상태 표 기준.
 
-**정색을 배경으로 채우는 곳은 배지가 아니다.** danger 버튼, 알림 카운트 인디케이터, 아바타 셋뿐이고
-셋 다 흰 글자 4.5:1 을 넘는다. 그 밖에서 `bg-success` `bg-warning` `bg-danger` `bg-info` 를 면으로 쓰지 않는다.
+**정색을 배경으로 채우는 곳은 배지가 아니다.** primary 버튼과 아바타, danger 버튼과 알림 카운트 넷뿐이고
+전부 흰 글자 4.5:1 을 넘는다. 그 밖에서 `bg-primary` `bg-danger` 를 면으로 쓰지 않는다.
+
+셀처럼 안에 라벨을 넣을 수 없는 자리는 중립을 명도 두 단계로 나눈다. 이 매핑도 StatusPill 에 있다.
+
+```jsx
+import { cellFill } from '../dashboard/StatusPill.jsx'
+// 여유 mute / 예약됨 primary-soft / 마감 danger-soft / 유지보수 line-def
+<span className={clsx('block h-8 w-10 rounded-xs', cellFill(state))} title={`${date} ${hour} ${label}`} />
+```
 
 ```jsx
 // 알림 카운트. 벨 우상단 밖에 걸친다. Badge 를 쓰면 높이가 20px 이라 20px 벨을 덮는다
@@ -361,4 +365,6 @@ hoursText(value, t)                   // 휴관 24시간 입실~퇴실 같은 �
 - `<select>` `<input type="date">` 노출
 - `localStorage`
 - 상태 색 매핑을 StatusPill 밖에서 다시 정의
+- `success` `warning` `info` 클래스. 9단계에서 토큰째 지웠다. 유채색은 primary 와 danger 둘뿐이다
+- 도넛과 랭크에서 1등 밖에 파랑을 쓰는 것. 강조는 하나다
 - 기관명 문자열 하드코딩

@@ -71,8 +71,8 @@ export default function OnboardingPage() {
   }, [step, org, facilities, result])
 
   const next = () => {
-    if (step === 0 && !canNext) { toast(t('admin.onboarding.requiredOrg'), 'warning'); return }
-    if (step === 1 && !canNext) { toast(t('admin.onboarding.requiredFacility'), 'warning'); return }
+    if (step === 0 && !canNext) { toast(t('admin.onboarding.requiredOrg'), 'danger'); return }
+    if (step === 1 && !canNext) { toast(t('admin.onboarding.requiredFacility'), 'danger'); return }
     setStep((s) => Math.min(STEPS.length - 1, s + 1))
   }
 
@@ -84,7 +84,7 @@ export default function OnboardingPage() {
     }).catch(() => {})
     setActivated(true)
     pushNotification({ type: 'onboardingDone', to: '/admin', vars: { org: org.orgName } })
-    toast(t('admin.onboarding.activated'), 'success')
+    toast(t('admin.onboarding.activated'), 'primary')
     setTimeout(() => navigate('/admin'), 900)
   }
 
@@ -119,7 +119,7 @@ export default function OnboardingPage() {
       </div>
 
       {existing && step === 0 && (
-        <p className="rounded-md bg-info-soft px-4 py-3 type-body-sm text-info-text">{t('admin.onboarding.rebuildDesc')}</p>
+        <p className="rounded-md bg-primary-soft px-4 py-3 type-body-sm text-primary-text">{t('admin.onboarding.rebuildDesc')}</p>
       )}
 
       <section className="bg-page rounded-lg shadow-card p-4 lg:p-6">

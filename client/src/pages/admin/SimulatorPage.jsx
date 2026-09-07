@@ -57,7 +57,7 @@ export default function SimulatorPage() {
         sourceDocId: m.sources?.[0]?.id
       })
       setReview(m.id, { faq: true })
-      toast(t('admin.simulator.faqCreated'), 'success')
+      toast(t('admin.simulator.faqCreated'), 'primary')
     } catch (e) {
       toast(e.error?.message || t('common.error.network'), 'danger')
     }

@@ -21,7 +21,7 @@ export default function PreviewStep({ orgName, facilities, onActivate, activated
       </div>
       <div className="flex flex-wrap items-center gap-3">
         <Button onClick={onActivate} disabled={activated}>{t('admin.onboarding.activate')}</Button>
-        {activated && <p className="type-body-sm text-success-text">{t('admin.onboarding.activated')}</p>}
+        {activated && <p className="type-body-sm text-primary-text">{t('admin.onboarding.activated')}</p>}
         {orgName && <p className="type-meta text-text-meta">{orgName}</p>}
       </div>
     </div>

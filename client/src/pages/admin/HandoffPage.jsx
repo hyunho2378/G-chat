@@ -84,7 +84,7 @@ export default function HandoffPage() {
         if (opts.defer) setTimeout(drop, 2600)
         else drop()
       }
-      toast(t('admin.handoff.saved'), 'success')
+      toast(t('admin.handoff.saved'), 'primary')
     } catch (e) {
       toast(e.error?.message || t('common.error.network'), 'danger')
     }
@@ -131,7 +131,7 @@ export default function HandoffPage() {
       const saved = await post(`/api/admin/handoff/${row.id}/reply`, { body: state.draft })
       setPatch((prev) => ({ ...prev, [row.id]: saved }))
       setAiState(row.id, { sent: saved })
-      toast(t('admin.handoff.saved'), 'success')
+      toast(t('admin.handoff.saved'), 'primary')
       if (saved.status !== tab) setTimeout(() => setRows((prev) => prev.filter((r) => r.id !== row.id)), 2600)
     } catch (e) {
       setAiState(row.id, { action: { ...state.action, status: 'awaiting' } })
@@ -204,7 +204,7 @@ export default function HandoffPage() {
                     <div className="mt-3 flex flex-wrap items-center gap-2 rounded-md bg-subtle px-3 py-2">
                       <Sparkles size={16} aria-hidden="true" className="shrink-0 text-text-meta" />
                       <span className="type-caption text-text-meta">{t('admin.handoffAi.suggest')}</span>
-                      <Badge tone="info">{s.department}</Badge>
+                      <Badge>{s.department}</Badge>
                       <span className="min-w-0 type-meta text-text-meta truncate">
                         {t('admin.handoffAi.because', { facility: facilityName[r.facilityId] || '', keyword: s.keyword })}
                       </span>

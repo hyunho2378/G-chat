@@ -31,14 +31,14 @@ export default function ActionBar({ text, messageId, onVote, onHandoff, handoffO
     if (vote) return
     setVote(v)
     onVote?.(messageId, v)
-    toast(t('chat.answer.thanks'), 'success')
+    toast(t('chat.answer.thanks'), 'primary')
   }
 
   return (
     <div className={clsx('mt-4 flex flex-wrap items-center gap-1', className)}>
       <IconButton size="md" aria-label={copied ? t('common.action.copied') : t('common.action.copy')} onClick={copy}>
         {copied
-          ? <Check size={16} aria-hidden="true" className="text-success" />
+          ? <Check size={16} aria-hidden="true" className="text-primary" />
           : <Copy size={16} aria-hidden="true" />}
       </IconButton>
 

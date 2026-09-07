@@ -66,7 +66,7 @@ export default function BuildStep({ docs, facilities, result, onDone }) {
             {t('admin.onboarding.buildDoneFacilities', { n: result.facilities })}
           </p>
           {result.failed > 0 && (
-            <p className="mt-1 type-body-sm text-warning-text tabular-nums">
+            <p className="mt-1 type-body-sm text-danger-text tabular-nums">
               {t('admin.onboarding.buildFailed', { n: result.failed })}
             </p>
           )}

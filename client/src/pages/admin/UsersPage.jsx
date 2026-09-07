@@ -55,7 +55,7 @@ export default function UsersPage() {
     e.preventDefault()
     await post('/api/admin/users/invite', form).catch(() => {})
     setModal(false)
-    toast(t('admin.users.invited'), 'success')
+    toast(t('admin.users.invited'), 'primary')
   }
 
   const columns = [
