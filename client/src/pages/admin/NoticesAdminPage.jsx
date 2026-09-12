@@ -13,6 +13,7 @@ import Drawer from '../../components/ui/Drawer.jsx'
 import Input from '../../components/ui/Input.jsx'
 import MultiSelect from '../../components/ui/MultiSelect.jsx'
 import Select from '../../components/ui/Select.jsx'
+import EmptyState from '../../components/ui/EmptyState.jsx'
 import Skeleton from '../../components/ui/Skeleton.jsx'
 import Textarea from '../../components/ui/Textarea.jsx'
 import DataTable from '../../components/dashboard/DataTable.jsx'
@@ -34,6 +35,8 @@ export default function NoticesAdminPage() {
   const toast = useToast()
   const [params, setParams] = useSearchParams()
   const [rows, setRows] = useState(null)
+  const [failed, setFailed] = useState(false)
+  const [reload, setReload] = useState(0)
   const [facilities, setFacilities] = useState([])
   const [form, setForm] = useState(null)
   const [indexNode, setIndexNode] = useState(null)
@@ -54,9 +57,9 @@ export default function NoticesAdminPage() {
         })))
         setFacilities(f)
       })
-      .catch(() => { if (alive) setRows([]) })
+      .catch(() => { if (alive) setFailed(true) })
     return () => { alive = false }
-  }, [])
+  }, [reload])
 
   const facilityName = useMemo(() => Object.fromEntries(facilities.map((f) => [f.id, f.name])), [facilities])
   const openId = params.get('id')
@@ -127,7 +130,9 @@ export default function NoticesAdminPage() {
         </Button>
       </div>
 
-      {rows === null
+      {failed ? (
+        <EmptyState tone="error" onRetry={() => { setRows(null); setFailed(false); setReload((n) => n + 1) }} />
+      ) : rows === null
         ? <Skeleton variant="card" className="h-64" />
         : (
           <DataTable

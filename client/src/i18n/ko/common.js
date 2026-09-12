@@ -90,7 +90,14 @@ export default {
       searchDesc: "다른 말로 다시 찾아 주시기 바랍니다.",
       filterDesc: "필터를 바꾸면 다른 결과를 볼 수 있습니다."
     },
+    a11y: {
+      pagination: "페이지 이동",
+      prevPage: "이전 페이지",
+      nextPage: "다음 페이지"
+    },
     error: {
+      loadTitle: "자료를 불러오지 못했습니다",
+      loadDesc: "네트워크 상태를 확인하고 다시 시도해 주시기 바랍니다.",
       network: "서버에 연결할 수 없습니다. 잠시 후 다시 시도해 주시기 바랍니다.",
       notFound: "요청하신 자료를 찾을 수 없습니다.",
       unauthorized: "로그인이 필요합니다.",

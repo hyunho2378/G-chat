@@ -90,7 +90,14 @@ export default {
       searchDesc: "Try a different wording.",
       filterDesc: "Change the filters to see other results."
     },
+    a11y: {
+      pagination: "Pagination",
+      prevPage: "Previous page",
+      nextPage: "Next page"
+    },
     error: {
+      loadTitle: "Could not load the data",
+      loadDesc: "Check your connection and try again.",
       network: "Cannot reach the server. Please try again shortly.",
       notFound: "We could not find what you requested.",
       unauthorized: "Sign in required.",

@@ -15,15 +15,18 @@ export default function FacilitiesPage() {
   const [params, setParams] = useSearchParams()
   const type = params.get('type') || 'all'
   const [rows, setRows] = useState(null)
+  const [failed, setFailed] = useState(false)
+  const [reload, setReload] = useState(0)
 
   useEffect(() => {
     let alive = true
     setRows(null)
+    setFailed(false)
     get(`/api/facilities?type=${type}`)
       .then((r) => { if (alive) setRows(r) })
-      .catch(() => { if (alive) setRows([]) })
+      .catch(() => { if (alive) setFailed(true) })
     return () => { alive = false }
-  }, [type])
+  }, [type, reload])
 
   const setType = (next) => {
     const p = new URLSearchParams(params)
@@ -45,7 +48,9 @@ export default function FacilitiesPage() {
         ))}
       </div>
 
-      {rows === null ? (
+      {failed ? (
+        <EmptyState tone="error" onRetry={() => setReload((n) => n + 1)} />
+      ) : rows === null ? (
         <div className="mt-6 grid gap-3 md:gap-4 md:grid-cols-2 lg:grid-cols-3">
           {[0, 1, 2].map((i) => <Skeleton key={i} variant="card" />)}
         </div>

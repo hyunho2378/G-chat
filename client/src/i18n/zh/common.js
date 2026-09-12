@@ -90,7 +90,14 @@ export default {
       searchDesc: "请换一种说法再试。",
       filterDesc: "更改筛选条件即可查看其他结果。"
     },
+    a11y: {
+      pagination: "翻页",
+      prevPage: "上一页",
+      nextPage: "下一页"
+    },
     error: {
+      loadTitle: "无法加载数据",
+      loadDesc: "请检查网络状态后重试。",
       network: "无法连接服务器，请稍后重试。",
       notFound: "未找到您请求的资料。",
       unauthorized: "需要登录。",

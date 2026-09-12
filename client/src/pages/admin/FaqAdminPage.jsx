@@ -12,6 +12,7 @@ import Chip from '../../components/ui/Chip.jsx'
 import Drawer from '../../components/ui/Drawer.jsx'
 import Input from '../../components/ui/Input.jsx'
 import Select from '../../components/ui/Select.jsx'
+import EmptyState from '../../components/ui/EmptyState.jsx'
 import Skeleton from '../../components/ui/Skeleton.jsx'
 import Textarea from '../../components/ui/Textarea.jsx'
 import Toggle from '../../components/ui/Toggle.jsx'
@@ -27,6 +28,8 @@ export default function FaqAdminPage() {
   const q = params.get('q') || ''
 
   const [rows, setRows] = useState(null)
+  const [failed, setFailed] = useState(false)
+  const [reload, setReload] = useState(0)
   const [facilities, setFacilities] = useState([])
   const [docs, setDocs] = useState([])
   const [visible, setVisible] = useState({})
@@ -38,9 +41,9 @@ export default function FaqAdminPage() {
     let alive = true
     Promise.all([get('/api/admin/faq'), get('/api/admin/facilities'), get('/api/admin/knowledge/docs')])
       .then(([f, fac, d]) => { if (!alive) return; setRows(f); setFacilities(fac); setDocs(d) })
-      .catch(() => { if (alive) setRows([]) })
+      .catch(() => { if (alive) setFailed(true) })
     return () => { alive = false }
-  }, [])
+  }, [reload])
 
   const facilityName = useMemo(() => Object.fromEntries(facilities.map((f) => [f.id, f.name])), [facilities])
   const categories = useMemo(() => [...new Set((rows || []).map((r) => r.category))], [rows])
@@ -115,7 +118,9 @@ export default function FaqAdminPage() {
         </div>
       </div>
 
-      {rows === null
+      {failed ? (
+        <EmptyState tone="error" onRetry={() => { setRows(null); setFailed(false); setReload((n) => n + 1) }} />
+      ) : rows === null
         ? <Skeleton variant="card" className="h-64" />
         : <DataTable columns={columns} rows={filtered} caption={t('admin.faq.title')} emptyImage="/images/illustrations/no-results.svg" emptyTitle={t('admin.faq.empty')} emptyDesc={t(q ? 'common.empty.searchDesc' : 'common.empty.filterDesc')} onRowClick={(r) => setEdit({ ...r })} />}
 

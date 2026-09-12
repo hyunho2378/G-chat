@@ -41,6 +41,8 @@ export default function HandoffPage() {
   const [params, setParams] = useSearchParams()
   const tab = TABS.includes(params.get('tab')) ? params.get('tab') : 'wait'
   const [rows, setRows] = useState(null)
+  const [failed, setFailed] = useState(false)
+  const [reload, setReload] = useState(0)
   const [facilities, setFacilities] = useState([])
   const [patch, setPatch] = useState({})
 
@@ -55,9 +57,9 @@ export default function HandoffPage() {
   useEffect(() => {
     let alive = true
     setRows(null)
-    get(`/api/admin/handoff?status=${tab}`).then((r) => { if (alive) setRows(r) }).catch(() => { if (alive) setRows([]) })
+    get(`/api/admin/handoff?status=${tab}`).then((r) => { if (alive) setRows(r) }).catch(() => { if (alive) setFailed(true) })
     return () => { alive = false }
-  }, [tab])
+  }, [tab, reload])
 
   const [ai, setAi] = useState({})        // { [id]: { node, draft, action, sent } }
   const facilityById = useMemo(() => Object.fromEntries(facilities.map((f) => [f.id, f])), [facilities])
@@ -146,7 +148,9 @@ export default function HandoffPage() {
         items={TABS.map((v) => ({ value: v, label: t(`admin.handoff.tab${v[0].toUpperCase()}${v.slice(1)}`) }))}
       />
 
-      {rows === null ? (
+      {failed ? (
+        <EmptyState tone="error" onRetry={() => { setRows(null); setFailed(false); setReload((n) => n + 1) }} />
+      ) : rows === null ? (
         <div className="space-y-3">{[0, 1, 2].map((i) => <Skeleton key={i} variant="card" />)}</div>
       ) : rows.length === 0 ? (
         <EmptyState title={t(`admin.handoff.empty${tab[0].toUpperCase()}${tab.slice(1)}`)} desc={t('common.empty.filterDesc')} />

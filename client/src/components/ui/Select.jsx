@@ -92,7 +92,8 @@ export default function Select({
       {label && !compact && <label htmlFor={btnId} className="block type-caption text-text-sec mb-1.5">{label}</label>}
       <button
         ref={triggerRef} id={btnId} type="button" role="combobox"
-        aria-haspopup="listbox" aria-expanded={open} aria-controls={`${btnId}-list`}
+        aria-haspopup="listbox" aria-expanded={open}
+        aria-invalid={error ? true : undefined} aria-controls={`${btnId}-list`}
         aria-activedescendant={open ? `${btnId}-opt-${highlight}` : undefined}
         aria-label={compact ? label : undefined}
         disabled={disabled}

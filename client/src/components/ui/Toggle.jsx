@@ -10,18 +10,25 @@ export default function Toggle({ checked = false, onChange, label, disabled, id,
         id={switchId} type="button" role="switch" aria-checked={checked} disabled={disabled}
         onClick={() => onChange?.(!checked)}
         className={clsx(
-          'relative w-11 h-6 shrink-0 rounded-full transition-colors duration-fast',
-          'disabled:opacity-40 disabled:cursor-not-allowed',
-          checked ? 'bg-primary' : 'bg-line-strong'
+          // 트랙은 44x24 지만 hit area 는 모바일 44x44 다(플레이북 5.2)
+          'group inline-flex w-11 min-h-11 md:min-h-0 shrink-0 items-center',
+          'disabled:opacity-40 disabled:cursor-not-allowed'
         )}
       >
         <span
           aria-hidden="true"
           className={clsx(
-            'absolute left-0.5 top-0.5 w-5 h-5 rounded-full bg-page transition-transform duration-fast ease-out',
-            checked && 'translate-x-5'
+            'relative block w-11 h-6 rounded-full transition-colors duration-fast',
+            checked ? 'bg-primary' : 'bg-line-strong'
           )}
-        />
+        >
+          <span
+            className={clsx(
+              'absolute left-0.5 top-0.5 w-5 h-5 rounded-full bg-page transition-transform duration-fast ease-out',
+              checked && 'translate-x-5'
+            )}
+          />
+        </span>
       </button>
       <label htmlFor={switchId} className="type-body-sm text-text-sec cursor-pointer">{label}</label>
     </div>

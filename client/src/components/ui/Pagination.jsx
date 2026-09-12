@@ -1,5 +1,6 @@
 import clsx from 'clsx'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
+import { useLang } from '../../i18n/LangContext.jsx'
 
 // 현재 페이지 주변 5개만 노출한다
 function pages(page, last) {
@@ -8,13 +9,14 @@ function pages(page, last) {
 }
 
 export default function Pagination({ page = 1, total = 0, pageSize = 20, onChange, className }) {
+  const { t } = useLang()
   const last = Math.max(1, Math.ceil(total / pageSize))
   if (last <= 1) return null
-  const btn = 'inline-flex items-center justify-center w-9 h-9 rounded-md type-body-sm tabular-nums transition-colors duration-fast disabled:opacity-40 disabled:cursor-not-allowed'
+  const btn = 'inline-flex items-center justify-center w-9 h-9 min-w-11 min-h-11 md:min-w-0 md:min-h-0 rounded-md type-body-sm tabular-nums transition-colors duration-fast disabled:opacity-40 disabled:cursor-not-allowed'
 
   return (
-    <nav className={clsx('flex items-center justify-center gap-1', className)} aria-label="페이지 이동">
-      <button type="button" className={clsx(btn, 'text-text-sec hover:bg-mute')} disabled={page <= 1} onClick={() => onChange?.(page - 1)} aria-label="이전 페이지">
+    <nav className={clsx('flex flex-wrap items-center justify-center gap-1', className)} aria-label={t('common.a11y.pagination')}>
+      <button type="button" className={clsx(btn, 'text-text-sec hover:bg-mute')} disabled={page <= 1} onClick={() => onChange?.(page - 1)} aria-label={t('common.a11y.prevPage')}>
         <ChevronLeft size={16} />
       </button>
       {pages(page, last).map((p) => (
@@ -26,7 +28,7 @@ export default function Pagination({ page = 1, total = 0, pageSize = 20, onChang
           {p}
         </button>
       ))}
-      <button type="button" className={clsx(btn, 'text-text-sec hover:bg-mute')} disabled={page >= last} onClick={() => onChange?.(page + 1)} aria-label="다음 페이지">
+      <button type="button" className={clsx(btn, 'text-text-sec hover:bg-mute')} disabled={page >= last} onClick={() => onChange?.(page + 1)} aria-label={t('common.a11y.nextPage')}>
         <ChevronRight size={16} />
       </button>
     </nav>

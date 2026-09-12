@@ -4,7 +4,12 @@ import clsx from 'clsx'
 import { Loader2 } from 'lucide-react'
 
 const BASE = 'pressable inline-flex items-center justify-center gap-2 rounded-md font-medium disabled:opacity-40 disabled:cursor-not-allowed'
-const SIZE = { sm: 'h-8 px-3 type-caption', md: 'h-10 px-4 type-body-sm', lg: 'h-11 px-5 type-body-sm' }
+// 모바일 터치 타깃 44(플레이북 5.2, DESIGN.md 접근성 절). md 이상은 데스크톱 밀도를 그대로 둔다
+const SIZE = {
+  sm: 'h-8 min-h-11 min-w-11 md:min-h-0 md:min-w-0 px-3 type-caption',
+  md: 'h-10 min-h-11 min-w-11 md:min-h-0 md:min-w-0 px-4 type-body-sm',
+  lg: 'h-11 px-5 type-body-sm'
+}
 const VARIANT = {
   primary: 'bg-primary text-text-inverse hover:bg-primary-hover',
   secondary: 'bg-page text-primary ring-1 ring-inset ring-line-def hover:bg-mute',

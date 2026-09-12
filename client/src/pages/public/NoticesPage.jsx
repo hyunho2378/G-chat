@@ -11,6 +11,8 @@ import Skeleton from '../../components/ui/Skeleton.jsx'
 export default function NoticesPage() {
   const { t, lang } = useLang()
   const [rows, setRows] = useState(null)
+  const [failed, setFailed] = useState(false)
+  const [reload, setReload] = useState(0)
   const [facilities, setFacilities] = useState({})
 
   useEffect(() => {
@@ -21,16 +23,18 @@ export default function NoticesPage() {
         setRows(notices)
         setFacilities(Object.fromEntries(facs.map((f) => [f.id, facilityName(f, lang)])))
       })
-      .catch(() => { if (alive) setRows([]) })
+      .catch(() => { if (alive) setFailed(true) })
     return () => { alive = false }
-  }, [lang])
+  }, [lang, reload])
 
   return (
     <div className="page-enter mx-auto w-full max-w-page px-4 md:px-6 lg:px-8 xl:px-10 3xl:px-16 py-8 lg:py-10">
       <h1 className="type-h1 text-text-pri">{t('common.notice.title')}</h1>
       <p className="mt-2 type-body text-text-meta">{t('common.notice.subtitle')}</p>
 
-      {rows === null ? (
+      {failed ? (
+        <EmptyState tone="error" onRetry={() => { setRows(null); setFailed(false); setReload((n) => n + 1) }} />
+      ) : rows === null ? (
         <div className="mt-6 space-y-3">{[0, 1, 2].map((i) => <Skeleton key={i} variant="card" />)}</div>
       ) : rows.length === 0 ? (
         <EmptyState title={t('common.notice.empty')} desc={t('common.empty.desc')} />

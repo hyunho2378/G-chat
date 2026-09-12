@@ -33,6 +33,7 @@ export default function NoticeDetailPage() {
     return (
       <div className="mx-auto w-full max-w-page px-4 md:px-6 py-10">
         <EmptyState
+          tone="error"
           title={t('common.notice.notFound')} desc={t('common.error.notFound')}
           action={<Button as={Link} to="/notices">{t('common.notice.title')}</Button>}
         />
@@ -54,7 +55,7 @@ export default function NoticeDetailPage() {
             {t('common.notice.ask')}
           </Button>
           {facility && (
-            <Link to={`/facilities/${facility.id}`} className="type-body-sm text-primary hover:text-primary-hover transition-colors duration-fast">
+            <Link to={`/facilities/${facility.id}`} className="inline-flex items-center min-h-11 md:min-h-0 type-body-sm text-primary hover:text-primary-hover transition-colors duration-fast">
               {t('common.notice.related')} {facilityName(facility, lang)}
             </Link>
           )}

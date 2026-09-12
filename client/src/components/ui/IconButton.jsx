@@ -1,7 +1,12 @@
 import { forwardRef } from 'react'
 import clsx from 'clsx'
 
-const SIZE = { sm: 'w-8 h-8', md: 'w-10 h-10', lg: 'w-11 h-11' }
+// 그림은 작아도 모바일 hit area 는 44x44 다(플레이북 2.7, 5.2)
+const SIZE = {
+  sm: 'w-8 h-8 min-w-11 min-h-11 md:min-w-0 md:min-h-0',
+  md: 'w-10 h-10 min-w-11 min-h-11 md:min-w-0 md:min-h-0',
+  lg: 'w-11 h-11'
+}
 const VARIANT = {
   ghost: 'bg-transparent text-text-sec hover:bg-mute hover:text-text-pri',
   soft: 'bg-primary-soft text-primary hover:bg-primary-line',

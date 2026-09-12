@@ -17,13 +17,15 @@ export default function FaqPage() {
   const [params, setParams] = useSearchParams()
   const cat = params.get('cat') || ''
   const [all, setAll] = useState(null)
+  const [failed, setFailed] = useState(false)
+  const [reload, setReload] = useState(0)
   const [openId, setOpenId] = useState(null)
 
   useEffect(() => {
     let alive = true
-    get('/api/faq').then((r) => { if (alive) setAll(r) }).catch(() => { if (alive) setAll([]) })
+    get('/api/faq').then((r) => { if (alive) setAll(r) }).catch(() => { if (alive) setFailed(true) })
     return () => { alive = false }
-  }, [])
+  }, [reload])
 
   const setCat = (next) => {
     const p = new URLSearchParams(params)
@@ -53,7 +55,9 @@ export default function FaqPage() {
         </div>
       )}
 
-      {rows === null ? (
+      {failed ? (
+        <EmptyState tone="error" onRetry={() => { setAll(null); setFailed(false); setReload((n) => n + 1) }} />
+      ) : rows === null ? (
         <div className="mt-6 space-y-3">{[0, 1, 2].map((i) => <Skeleton key={i} variant="card" />)}</div>
       ) : rows.length === 0 ? (
         <EmptyState image="/images/illustrations/no-results.svg" title={t('common.faq.empty')} desc={t('common.empty.filterDesc')} />

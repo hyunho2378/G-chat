@@ -108,7 +108,7 @@ export default function DataTable({
               {onRowClick ? (
                 <button
                   type="button" onClick={() => onRowClick(row)}
-                  className="pressable block w-full text-left type-h3 text-text-pri"
+                  className="pressable flex w-full items-center min-h-11 md:min-h-0 text-left type-h3 text-text-pri"
                 >
                   {cell(first, row)}
                 </button>

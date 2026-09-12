@@ -15,9 +15,9 @@ export default function Footer({ settings }) {
             <p className="mt-2 type-body-sm text-text-meta">{t('common.footer.desc')}</p>
           </div>
           <nav className="flex flex-wrap items-center gap-x-4 gap-y-2" aria-label={t('common.footer.privacy')}>
-            <Link to="/faq" className="type-body-sm text-text-sec hover:text-text-pri transition-colors duration-fast">{t('common.nav.faq')}</Link>
-            <Link to="/notices" className="type-body-sm text-text-sec hover:text-text-pri transition-colors duration-fast">{t('common.nav.notices')}</Link>
-            <Link to="/privacy" className="type-body-sm font-medium text-text-pri hover:text-primary transition-colors duration-fast">{t('common.footer.privacy')}</Link>
+            <Link to="/faq" className="inline-flex items-center min-h-11 min-w-11 md:min-h-0 md:min-w-0 type-body-sm text-text-sec hover:text-text-pri transition-colors duration-fast">{t('common.nav.faq')}</Link>
+            <Link to="/notices" className="inline-flex items-center min-h-11 min-w-11 md:min-h-0 md:min-w-0 type-body-sm text-text-sec hover:text-text-pri transition-colors duration-fast">{t('common.nav.notices')}</Link>
+            <Link to="/privacy" className="inline-flex items-center min-h-11 min-w-11 md:min-h-0 md:min-w-0 type-body-sm font-medium text-text-pri hover:text-primary transition-colors duration-fast">{t('common.footer.privacy')}</Link>
           </nav>
         </div>
       </div>

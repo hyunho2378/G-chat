@@ -17,7 +17,7 @@ export default function Input({ label, hint, error, leftIcon, rightSlot, id, cla
         <input
           id={inputId}
           aria-invalid={error ? true : undefined}
-          className="flex-1 min-w-0 bg-transparent outline-none type-body-sm text-text-pri placeholder:text-text-ter"
+          className="flex-1 h-full min-w-0 bg-transparent outline-none type-body-sm text-text-pri placeholder:text-text-ter"
           {...rest}
         />
         {rightSlot && <span className="ml-2 shrink-0">{rightSlot}</span>}

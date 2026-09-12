@@ -90,7 +90,14 @@ export default {
       searchDesc: "別の言葉でお探しください。",
       filterDesc: "フィルタを変えると別の結果が表示されます。"
     },
+    a11y: {
+      pagination: "ページ移動",
+      prevPage: "前のページ",
+      nextPage: "次のページ"
+    },
     error: {
+      loadTitle: "データを読み込めませんでした",
+      loadDesc: "通信状態をご確認のうえ、もう一度お試しください。",
       network: "サーバーに接続できません。しばらくしてから再度お試しください。",
       notFound: "お探しの資料が見つかりません。",
       unauthorized: "ログインが必要です。",

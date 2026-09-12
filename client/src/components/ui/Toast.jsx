@@ -1,6 +1,7 @@
 // 전역 큐를 그린다. App.jsx 에 한 번만 마운트한다. 문구는 useToast 로 넣는다.
 import clsx from 'clsx'
 import { Check, Info, X, XCircle } from 'lucide-react'
+import { useLang } from '../../i18n/LangContext.jsx'
 import { useToastStore } from '../../hooks/useToast.js'
 
 // 9단계. 톤은 셋이다. neutral 은 그냥 알림, primary 는 완료, danger 는 실패와 입력 오류다.
@@ -13,6 +14,8 @@ const TONE = {
 const ICON = { neutral: Info, primary: Check, danger: XCircle }
 
 export default function Toast() {
+  // map 변수명이 t 라 사전 함수는 tr 로 받는다
+  const { t: tr } = useLang()
   const toasts = useToastStore((s) => s.toasts)
   const dismiss = useToastStore((s) => s.dismiss)
   if (!toasts.length) return null
@@ -28,7 +31,7 @@ export default function Toast() {
           <div key={t.id} className={clsx('toast-item flex items-start gap-2 p-3 rounded-md shadow-float', TONE[t.tone] || TONE.neutral)}>
             <Icon size={16} className="mt-0.5 shrink-0" aria-hidden="true" />
             <p className="flex-1 min-w-0 type-body-sm">{t.message}</p>
-            <button type="button" aria-label="알림 닫기" onClick={() => dismiss(t.id)} className="shrink-0">
+            <button type="button" aria-label={tr('common.action.close')} onClick={() => dismiss(t.id)} className="shrink-0">
               <X size={16} aria-hidden="true" />
             </button>
           </div>

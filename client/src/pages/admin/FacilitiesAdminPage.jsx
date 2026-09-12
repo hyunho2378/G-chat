@@ -8,6 +8,7 @@ import { get } from '../../lib/api.js'
 import { formatDate, formatNumber } from '../../lib/format.js'
 import { useTopbar } from '../../store/useAdminUi.js'
 import Button from '../../components/ui/Button.jsx'
+import EmptyState from '../../components/ui/EmptyState.jsx'
 import Skeleton from '../../components/ui/Skeleton.jsx'
 import DataTable from '../../components/dashboard/DataTable.jsx'
 import StatusPill from '../../components/dashboard/StatusPill.jsx'
@@ -27,6 +28,8 @@ function Summary({ label, value, unit }) {
 export default function FacilitiesAdminPage() {
   const { t } = useLang()
   const [facilities, setFacilities] = useState(null)
+  const [failed, setFailed] = useState(false)
+  const [reload, setReload] = useState(0)
   const [logs, setLogs] = useState([])
 
   useTopbar({ title: t('admin.facilities.title') })
@@ -35,9 +38,9 @@ export default function FacilitiesAdminPage() {
     let alive = true
     Promise.all([get('/api/admin/facilities'), get('/api/admin/logs?page=1&pageSize=1000')])
       .then(([f, l]) => { if (!alive) return; setFacilities(f); setLogs(l.rows || []) })
-      .catch(() => { if (alive) setFacilities([]) })
+      .catch(() => { if (alive) setFailed(true) })
     return () => { alive = false }
-  }, [])
+  }, [reload])
 
   const today = new Date().toISOString().slice(0, 10)
   const todayChats = useMemo(() => logs.reduce((acc, r) => {
@@ -66,6 +69,13 @@ export default function FacilitiesAdminPage() {
     { key: 'result', label: t('admin.facilities.colAiStatus'), width: 120, render: (r) => <StatusPill size="sm" status={r.result} label={t(`common.status.${r.result}`)} /> }
   ]
 
+  if (failed) {
+    return (
+      <div className="mx-auto w-full max-w-wide px-4 md:px-6 lg:px-8 py-6">
+        <EmptyState tone="error" onRetry={() => { setFacilities(null); setFailed(false); setReload((n) => n + 1) }} />
+      </div>
+    )
+  }
   if (facilities === null) {
     return (
       <div className="mx-auto w-full max-w-wide px-4 md:px-6 lg:px-8 py-6 lg:py-8 space-y-5">

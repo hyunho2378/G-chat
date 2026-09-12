@@ -11,6 +11,7 @@ import Input from '../../components/ui/Input.jsx'
 import Modal from '../../components/ui/Modal.jsx'
 import MultiSelect from '../../components/ui/MultiSelect.jsx'
 import Select from '../../components/ui/Select.jsx'
+import EmptyState from '../../components/ui/EmptyState.jsx'
 import Skeleton from '../../components/ui/Skeleton.jsx'
 import DataTable from '../../components/dashboard/DataTable.jsx'
 import StatusPill from '../../components/dashboard/StatusPill.jsx'
@@ -35,6 +36,8 @@ export default function UsersPage() {
   const { t } = useLang()
   const toast = useToast()
   const [rows, setRows] = useState(null)
+  const [failed, setFailed] = useState(false)
+  const [reload, setReload] = useState(0)
   const [facilities, setFacilities] = useState([])
   const [modal, setModal] = useState(false)
   const [form, setForm] = useState({ email: '', role: 'operator', facilities: [] })
@@ -45,9 +48,9 @@ export default function UsersPage() {
     let alive = true
     Promise.all([get('/api/admin/users'), get('/api/admin/facilities')])
       .then(([u, f]) => { if (!alive) return; setRows(u); setFacilities(f) })
-      .catch(() => { if (alive) setRows([]) })
+      .catch(() => { if (alive) setFailed(true) })
     return () => { alive = false }
-  }, [])
+  }, [reload])
 
   const facilityName = useMemo(() => Object.fromEntries(facilities.map((f) => [f.id, f.name])), [facilities])
 
@@ -75,7 +78,9 @@ export default function UsersPage() {
         </Button>
       </div>
 
-      {rows === null
+      {failed ? (
+        <EmptyState tone="error" onRetry={() => { setRows(null); setFailed(false); setReload((n) => n + 1) }} />
+      ) : rows === null
         ? <Skeleton variant="card" className="h-64" />
         : <DataTable columns={columns} rows={rows} caption={t('admin.users.title')} />}
 

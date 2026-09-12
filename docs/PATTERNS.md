@@ -355,6 +355,50 @@ hoursText(value, t)                   // 휴관 24시간 입실~퇴실 같은 �
 번역하지 않는 원문(주소, 이용 안내, 공지 본문, FAQ 질문과 답변, 부서명)에는 `lang="ko"` 를 박는다.
 원문 무결성 규칙(PITFALLS 23)을 지키면서 그 부분만 한국어임을 선언한다(WCAG 3.1.2 Language of Parts).
 
+## 21. 모바일 터치 타깃 (9-2)
+
+플레이북 5.2. 모바일 조작 대상은 44x44 다. 데스크톱 밀도는 그대로 두므로 `md:` 에서 되돌린다.
+프리미티브에만 넣는다. 페이지가 개별 높이를 다시 정하지 않는다.
+
+```jsx
+// Button SIZE
+sm: 'h-8 min-h-11 min-w-11 md:min-h-0 md:min-w-0 px-3 type-caption'
+// IconButton SIZE. 그림은 작아도 hit area 는 44
+sm: 'w-8 h-8 min-w-11 min-h-11 md:min-w-0 md:min-h-0'
+// Tabs / Chip / Pagination 도 같은 규칙
+```
+
+세로만 44 로 맞추면 짧은 라벨(적용, 공지, 7일)이 가로 43 으로 남는다. `min-w-11` 을 같이 둔다.
+Input 은 래퍼가 44 라도 안쪽 native input 에 `h-full` 이 없으면 위아래 12px 을 눌러도 포커스가 안 간다.
+Pagination 은 버튼이 44 가 되면 320 에서 한 줄에 안 들어가므로 `flex-wrap` 이 필요하다.
+
+예외는 둘뿐이다. 문장 안 인라인 링크, 그리고 보이는 라벨이 대신 타깃이 되는 `sr-only` 파일 입력이다.
+
+## 22. 데이터 상태와 재시도 (9-2)
+
+플레이북 3.5. **서버 오류를 빈 결과로 위장하지 않는다.** `catch(() => setRows([]))` 금지.
+
+```jsx
+const [rows, setRows] = useState(null)
+const [failed, setFailed] = useState(false)
+const [reload, setReload] = useState(0)
+
+useEffect(() => {
+  let alive = true
+  setFailed(false)
+  get(url).then((r) => { if (alive) setRows(r) })
+          .catch(() => { if (alive) setFailed(true) })
+  return () => { alive = false }
+}, [deps, reload])
+
+{failed ? (
+  <EmptyState tone="error" onRetry={() => { setRows(null); setFailed(false); setReload((n) => n + 1) }} />
+) : rows === null ? <Skeleton .../> : rows.length === 0 ? <EmptyState .../> : <List />}
+```
+
+`EmptyState tone="error"` 가 `role="alert"` 과 기본 문구와 재시도 버튼을 담당한다. 빈 결과와 같은 표면이라 상태가 바뀌어도 레이아웃이 크게 움직이지 않는다.
+`Skeleton` 은 막대가 `aria-hidden` 이고 컨테이너가 `role="status" aria-live="polite"` 로 불러오는 중임을 알린다.
+
 ## 절대 금지 패턴
 
 - `text-[15px]` 임의 활자 크기. type-* 만
@@ -369,3 +413,6 @@ hoursText(value, t)                   // 휴관 24시간 입실~퇴실 같은 �
 - `success` `warning` `info` 클래스. 9단계에서 토큰째 지웠다. 유채색은 primary 와 danger 둘뿐이다
 - 도넛과 랭크에서 1등 밖에 파랑을 쓰는 것. 강조는 하나다
 - 기관명 문자열 하드코딩
+- `catch(() => setRows([]))`. 오류를 빈 결과로 위장하는 것
+- `aria-label="닫기"` 처럼 aria 속성에 문자열 하드코딩. aria 도 번역 대상이다
+- 페이지에서 터치 타깃 높이를 다시 정하는 것. 프리미티브가 정한다

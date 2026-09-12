@@ -13,6 +13,7 @@ import Badge from '../../components/ui/Badge.jsx'
 import Button from '../../components/ui/Button.jsx'
 import Drawer from '../../components/ui/Drawer.jsx'
 import Select from '../../components/ui/Select.jsx'
+import EmptyState from '../../components/ui/EmptyState.jsx'
 import Skeleton from '../../components/ui/Skeleton.jsx'
 import Textarea from '../../components/ui/Textarea.jsx'
 import DataTable from '../../components/dashboard/DataTable.jsx'
@@ -65,6 +66,8 @@ export default function LogsPage() {
   const vote = params.get('vote') || ''
 
   const [rows, setRows] = useState(null)
+  const [failed, setFailed] = useState(false)
+  const [reload, setReload] = useState(0)
   const [facilities, setFacilities] = useState([])
   const [detail, setDetail] = useState(null)     // GET /api/admin/logs/:id 응답
   const [note, setNote] = useState('')
@@ -87,9 +90,9 @@ export default function LogsPage() {
     if (lang) qs.set('lang', lang)
     if (vote) qs.set('vote', vote)
     const url = sampleMode ? '/api/admin/logs/sample' : `/api/admin/logs?${qs}`
-    get(url).then((d) => { if (alive) setRows(d.rows || []) }).catch(() => { if (alive) setRows([]) })
+    get(url).then((d) => { if (alive) setRows(d.rows || []) }).catch(() => { if (alive) setFailed(true) })
     return () => { alive = false }
-  }, [range, facilityId, result, lang, vote, sampleMode])
+  }, [range, facilityId, result, lang, vote, sampleMode, reload])
 
   const setParam = (key, value) => {
     const p = new URLSearchParams(params)
@@ -196,7 +199,9 @@ export default function LogsPage() {
         )}
       </div>
 
-      {rows === null
+      {failed ? (
+        <EmptyState tone="error" onRetry={() => { setRows(null); setFailed(false); setReload((n) => n + 1) }} />
+      ) : rows === null
         ? <Skeleton variant="card" className="h-64" />
         : (
           <DataTable

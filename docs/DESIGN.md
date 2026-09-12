@@ -359,10 +359,13 @@ WCAG 2.2 AA.
 
 - 모든 인터랙티브 요소 키보드 도달. 탭 순서는 시각 순서와 같다.
 - focus-visible 2px primary offset 2px 전역.
-- 터치 타깃 최소 44px 모바일. 데스크톱 표 안 컴팩트 버튼 32는 hover 영역 40 확보.
+- 터치 타깃 최소 44x44 모바일(가로도 44). 프리미티브가 `min-h-11 min-w-11 md:min-h-0 md:min-w-0` 로 강제하고 md 이상은 데스크톱 밀도를 유지한다.
+  예외는 문장 안 인라인 링크와 보이는 라벨이 대신 타깃이 되는 sr-only 파일 입력뿐이다(9-2에서 390px 25경로 실측).
 - 텍스트 대비 4.5 이상. 위 텍스트 표의 대비값 기준. text-ter는 정보 텍스트 금지.
 - 상태를 색으로만 전하지 않는다. 필과 배지는 항상 텍스트 라벨 동반.
-- 스트리밍 답변 영역 aria-live polite. 스켈레톤 aria-label 답변 생성 중.
+- 스트리밍 답변 영역 aria-live polite. 스켈레톤은 `role="status" aria-live="polite"` 로 불러오는 중임을 알린다(막대는 aria-hidden).
+- 오류는 `role="alert"` 과 재시도 수단을 함께 둔다. 서버 오류를 빈 결과로 위장하지 않는다.
+- aria-label 도 번역 대상이다. 속성에 문자열을 하드코딩하지 않는다.
 - 이미지 alt 필수. 장식 이미지는 alt 빈 문자열.
 - 폼 라벨 association 필수. placeholder를 라벨 대용으로 쓰지 않는다.
 - 언어 전환 시 html lang 갱신.

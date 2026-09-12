@@ -44,6 +44,7 @@ export default function FacilityDetailPage() {
     return (
       <div className="mx-auto w-full max-w-page px-4 md:px-6 py-10">
         <EmptyState
+          tone="error"
           title={t('facility.detail.notFound')} desc={t('common.error.notFound')}
           action={<Button as={Link} to="/facilities">{t('facility.title')}</Button>}
         />

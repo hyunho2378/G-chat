@@ -1,11 +1,13 @@
 // PATTERNS.md 15번. Esc 닫기, 포커스 트랩, 열릴 때 첫 포커스 요소, body 스크롤 락.
 import clsx from 'clsx'
 import { X } from 'lucide-react'
+import { useLang } from '../../i18n/LangContext.jsx'
 import useBodyScrollLock from '../../hooks/useBodyScrollLock.js'
 import useFocusTrap from '../../hooks/useFocusTrap.js'
 import IconButton from './IconButton.jsx'
 
 export default function Modal({ open, onClose, title, footer, children, className }) {
+  const { t } = useLang()
   const trapRef = useFocusTrap(open, onClose)
   useBodyScrollLock(open)
   if (!open) return null
@@ -18,7 +20,7 @@ export default function Modal({ open, onClose, title, footer, children, classNam
       >
         <header className="px-6 pt-6 flex items-start justify-between gap-4">
           <h2 className="type-h2 text-text-pri">{title}</h2>
-          <IconButton aria-label="닫기" size="sm" onClick={onClose}><X size={20} /></IconButton>
+          <IconButton aria-label={t('common.action.close')} size="sm" onClick={onClose}><X size={20} /></IconButton>
         </header>
         <div className="px-6 py-4 overflow-y-auto">{children}</div>
         {footer && <footer className="px-6 pb-6 flex justify-end gap-2">{footer}</footer>}
