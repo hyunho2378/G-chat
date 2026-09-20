@@ -3,7 +3,7 @@
 // 3단계에서 쓰기 응답을 계약 형태로 채웠다. mock 은 세션 메모리에 상태를 쌓으므로
 // 시민 면 인계 접수 → 관리자 인계 목록 → 완료 처리 → 대시보드 반영 왕복이 실제로 돈다.
 const API_URL = import.meta.env.VITE_API_URL || ''
-const USE_MOCK = import.meta.env.VITE_USE_MOCK === 'true'
+export const USE_MOCK = import.meta.env.VITE_USE_MOCK === 'true'
 // 기관명은 4언어다. 화면은 lib/lang.js pickText 로 현재 언어 값을 고른다.
 // VITE_ORG_NAME 은 한국어 기본값 폴백으로만 쓴다(PITFALLS 24. 컴포넌트에 기관명을 박지 않는다)
 const ORG_NAME = import.meta.env.VITE_ORG_NAME || ''

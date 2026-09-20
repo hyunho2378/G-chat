@@ -1,11 +1,12 @@
 // ROUTES.md 그대로. 상담 홈만 즉시 로드하고 나머지는 lazy.
 import { lazy, Suspense, useEffect } from 'react'
-import { BrowserRouter, Route, Routes, useLocation } from 'react-router-dom'
+import { BrowserRouter, Navigate, Route, Routes, useLocation } from 'react-router-dom'
 import AdminLayout from './components/layout/AdminLayout.jsx'
 import PublicLayout from './components/layout/PublicLayout.jsx'
 import RequireAuth from './components/layout/RequireAuth.jsx'
 import Toast from './components/ui/Toast.jsx'
 import { LangProvider } from './i18n/LangContext.jsx'
+import { USE_MOCK } from './lib/api.js'
 import ChatPage from './pages/public/ChatPage.jsx'
 import useAuthStore from './store/useAuthStore.js'
 
@@ -68,10 +69,12 @@ export default function App() {
             {/* iframe 임베드용. PublicLayout 밖이라 TopNav 와 Footer 가 없다 */}
             <Route path="/widget" element={<WidgetPage />} />
 
-            <Route path="/admin/login" element={<LoginPage />} />
+            {/* 심사 데모(mock)는 로그인을 건너뛴다. LoginPage 는 백엔드 연동 때 되살리려고 그대로 둔다 */}
+            <Route path="/admin/login" element={USE_MOCK ? <Navigate to="/admin" replace /> : <LoginPage />} />
             <Route path="/admin" element={<RequireAuth />}>
               <Route element={<AdminLayout />}>
                 <Route index element={<DashboardPage />} />
+                <Route path="dashboard" element={<Navigate to="/admin" replace />} />
                 <Route path="logs" element={<LogsPage />} />
                 <Route path="handoff" element={<HandoffPage />} />
                 <Route path="reservations" element={<ReservationsPage />} />
@@ -80,6 +83,8 @@ export default function App() {
                 <Route path="reports" element={<ReportsPage />} />
                 <Route path="forecast" element={<ForecastPage />} />
                 <Route path="simulator" element={<SimulatorPage />} />
+                {/* 데모에서 잘못 친 관리자 주소는 404 대신 대시보드로 보낸다 */}
+                {USE_MOCK && <Route path="*" element={<Navigate to="/admin" replace />} />}
                 <Route element={<RequireAuth roles={['admin', 'operator']} />}>
                   <Route path="knowledge" element={<KnowledgePage />} />
                   <Route path="faq" element={<FaqAdminPage />} />

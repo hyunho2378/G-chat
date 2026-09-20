@@ -451,6 +451,51 @@ api.js 가 동결이라 아래는 화면 상태만 갱신한다. 새로고침하
 - 이 시나리오는 4단계까지 mock 으로 전 구간 검증했다. 백엔드가 붙으면 같은 흐름이 실데이터로 돈다
 - 확장 후보(범위 밖으로 기록만): 카카오톡 채널 실연동, 시설 데이터 다국어, 자체 예약 처리, 다크 모드, 오프라인 sLLM 시연 모드
 
+## 심사 데모 관리자 자동인증 (2026-09-20)
+
+심사 데모에서 로그인 절차를 없앴다. `/admin/login` 이든 `/admin/*` 어디든 로그인 화면과 입력 없이 곧바로 관리자 화면이 뜬다.
+**`VITE_USE_MOCK=true` 일 때만 적용되고, `false`(백엔드 실연동)는 기존 로그인 로직을 그대로 탄다.**
+
+| 파일 | 변경 |
+|------|------|
+| `lib/api.js` | `USE_MOCK` 을 export. mock 스위치가 두 곳에서 갈리지 않게 한 곳을 공유한다 |
+| `store/useAuthStore.js` | mock 이면 초기값이 `user = mock 관리자(admin)`, `ready = true`. `fetchMe` 와 `logout` 은 mock 에서 no-op |
+| `components/layout/RequireAuth.jsx` | 가드는 남기고 mock 이면 `<Outlet />` 을 바로 돌려준다(역할 가드 포함) |
+| `App.jsx` | mock 이면 `/admin/login` → `/admin`. `/admin/dashboard` 별칭 추가. mock 에서만 알 수 없는 `/admin/*` → `/admin` |
+| `pages/admin/LoginPage.jsx` | **손대지 않았다.** 백엔드 연동 때 복원용으로 그대로 둔다 |
+
+### 함정 하나. fetchMe 가 데모 인증을 지운다
+
+store 초기값만 인증됨으로 두면 부족하다. `App.jsx` 가 마운트할 때 `fetchMe()` 를 부르고,
+mock 의 `/api/auth/me` 는 항상 401 이라 `catch` 에서 `user: null` 로 덮는다. 새로고침 직후 잠깐 대시보드가 보이다가
+로그인으로 튕긴다. mock 이면 `fetchMe` 를 즉시 반환시켜 막았다.
+
+### 검증 (프로덕션 빌드를 `vite preview` 로 서빙해 새 진입으로 확인)
+
+| 항목 | 결과 |
+|------|------|
+| 직접 진입 11경로 | `/admin/login` `/admin` `/admin/dashboard` `/admin/logs` `/admin/analytics?tab=nps` `/admin/knowledge` `/admin/users` `/admin/settings` `/admin/onboarding` `/admin/foo` `/admin/foo/bar` 전부 로그인 없이 표시 |
+| 로그인 필드 | 11경로 전부 `input[type=password]` **0개** |
+| 새로고침 | 11경로 전부 같은 화면 유지 |
+| 쿼리 보존 | `/admin/analytics?tab=nps` 가 쿼리까지 그대로 열린다 |
+| 로그아웃 클릭 | 메뉴 항목이 실제로 눌리고, 결과는 `/admin` 대시보드. 인증이 풀리지 않는다. 새로고침 뒤에도 유지 |
+| 웹스토리지 | localStorage 0, sessionStorage 0, cookie 0. 초기값만으로 유지된다 |
+| **`VITE_USE_MOCK=false` 빌드** | `/admin/login` 은 "관리자 로그인" 폼, `/admin` 과 `/admin/logs` 는 `/admin/login` 으로 리다이렉트. 분기 정상 |
+| 가로 스크롤 | 29경로 x 9폭 = **261건 중 0** |
+| PITFALLS 1~17 | 앵커 24px, 스페이서 148 → 432 → 0, 조합 Enter 미전송(3 → 3), 재포커스 TEXTAREA |
+| i18n | 4언어 각 830, 차집합 0. `admin.login.*` 키 그대로 |
+| 금지 grep | 22항목 위반 0 |
+| 빌드 / `git diff --check` | 통과. 의존성 추가 0(deps 7 devDeps 5) |
+
+### 알아둘 것
+
+- **배포본에서 켜려면 Vercel 환경변수 `VITE_USE_MOCK=true` 가 필요하다.** `.env` 는 `.gitignore` 라 저장소에 없고,
+  Vite 는 빌드 시점에 값을 박는다. push 뒤 Vercel 이 다시 빌드해야 반영된다
+- 데모 모드에서 **알 수 없는 `/admin/*` 는 404 가 아니라 대시보드로 간다.** 심사위원이 주소를 잘못 쳐도 튕기지 않게 한 것이다.
+  이전 단계의 "삭제 라우트 3개 NotFound" 검증은 `/admin/billing` `/admin/roadmap` 에 한해 mock 에서는 더 이상 성립하지 않는다.
+  `VITE_USE_MOCK=false` 에서는 기존대로 로그인 가드가 먼저 막는다
+- 검증은 프로덕션 빌드를 로컬에서 서빙해 했다. 배포 URL 은 PROGRESS 에 기록돼 있지 않아 배포본 직접 접속은 하지 못했다
+
 ## 9-2 UI 디자인 시스템 전수검수 (UI_DESIGN_SYSTEM_PLAYBOOK 실행, 2026-09-13)
 
 루트 `UI_DESIGN_SYSTEM_PLAYBOOK.md` 를 G-Chat 에 실행했다. 플레이북은 다른 프로젝트(한림대 DAH) 기준 문서이고
@@ -1294,6 +1339,7 @@ KPI 4장 이름 최종 확인: 민원 자동처리율 / 이용자 만족도 NPS 
 재현 명령은 scratchpad 의 verify.mjs focus.mjs apicheck.mjs. 영구 보관하지 않았다(생성 파일 목록 밖). 3단계에서 다시 필요하면 같은 방식으로 만든다.
 
 ## 이번 세션 완료
+- **심사 데모 관리자 자동인증.** mock 일 때만 store 초기값을 인증됨으로 두고 가드와 로그인 라우트에 분기를 더했다. 로그인 페이지 파일은 보존
 - **9-2 UI 디자인 시스템 전수검수.** 플레이북 4부 5부 실행. 터치 타깃 173건 → 7건, 오류 상태와 재시도 신설, aria 하드코딩 제거. **9-2 완료**
 - **9-1 tint 명도 조정.** soft 배경이 바탕에 묻혀 칩 형태가 안 보이던 것을 한 단계 올렸다. 중립 배지 면은 mute 에서 line-def 로. **9-1 완료**
 - **9단계 KRDS 3색 체계 전환.** success(초록)와 warning(주황) 토큰 제거, 상태 22종 3단계 재매핑, 차트 무채색화, 도넛과 랭크 1등만 강조. **9단계 완료**
